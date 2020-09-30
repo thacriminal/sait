@@ -1,0 +1,257 @@
+{% extends 'base.html' %}
+{% block content %}
+<div ui-dashboardcolumn="ui-DashboardColumn">
+    <section ui-dashboardcard="ui-DashboardCard">
+      <header>
+        <h3 translate="settings.general" class="ng-scope">General</h3>
+      </header>
+      <div kind="single-text-field" label="Customer Number" object="CurrentUser" field="customer_number"
+        state="state" input-type="text" inert="true" class="ng-isolate-scope">
+        <!-- ngIf: !editing -->
+        <div ui-inlineform="ui-InlineForm" ng-if="!editing" class="ng-scope">
+          <dl ui-inlineform-list="ui-InlineForm-List">
+            <dt translate="Customer Number" class="ng-scope">Customer Number</dt>
+            <dd class="ng-binding">{{user.customer_number}}</dd>
+          </dl><a ng-hide="inert" ng-click="startEditing()" ng-class="{&#39;is-disabled&#39;: state.editing}"
+            translate="components.inline_form.edit" class="ng-scope ng-hide">edit</a><span ng-show="inert"
+            class="ng-binding"></span>
+        </div><!-- end ngIf: !editing -->
+        <!-- ngIf: !inert && editing -->
+      </div>
+      <div id="currencyEditHide" kind="options-list" label="settings.general.reference_currency" object="CurrentUser"
+        field="defaultCurrency" state="state" input-type="text" on-error="Must be a valid currency"
+        options="currencyOptions" class="ng-isolate-scope">
+        <!-- ngIf: !editing -->
+        <div ui-inlineform="ui-InlineForm" ng-if="!editing" class="ng-scope">
+          <dl ui-inlineform-list="ui-InlineForm-List">
+            <dt translate="settings.general.reference_currency" class="ng-scope">Reference currency</dt>
+            <dd class="ng-binding">{{user.reference_currency}}</dd>
+          </dl>
+          
+          <a ng-hide="inert" ng-click="startEditing()" ng-class="{&#39;is-disabled&#39;: state.editing}"
+            translate="components.inline_form.edit" onclick="startEdit()" class="ng-scope">edit</a><span ng-show="inert"
+            class="ng-binding ng-hide"></span>
+        </div><!-- end ngIf: !editing -->
+        <!-- ngIf: !inert && editing -->
+      </div>
+      <div id="currencyEditShow" style="display: none;" kind="options-list" label="settings.general.reference_currency" object="CurrentUser" field="defaultCurrency"
+    state="state" input-type="text" on-error="Must be a valid currency" options="currencyOptions"
+    class="ng-isolate-scope">
+    <!-- ngIf: !editing -->
+    <!-- ngIf: !inert && editing -->
+    <div ui-inlineform="editing" ng-if="!inert &amp;&amp; editing" class="ng-scope">
+        <form novalidate="novalidate" ng-submit="submitForm(inline)" name="inline" class="ng-pristine ng-valid">
+            <!-- ngIf: singleTextField -->
+            <!-- ngIf: passwordChange -->
+            <!-- ngIf: supportPinChange -->
+            <!-- ngIf: emailChange -->
+            <!-- ngIf: legalName -->
+            <!-- ngIf: abn -->
+            <!-- ngIf: optionsList -->
+            <dl ui-inlineform-list="ui-InlineForm-List" ng-if="optionsList" class="ng-scope"><input type="hidden"
+                    ng-model="selectedOption" name="value" autocomplete="off"
+                    class="ng-pristine ng-untouched ng-valid ng-not-empty">
+                <dt translate="settings.general.reference_currency" class="ng-scope">Reference currency</dt>
+                <dd ui-inlineform-options="ui-InlineForm-Options">
+                    <!-- ngRepeat: option in options -->
+                    <div onclick="selectCurrency(this)" ng-repeat="option in options" ui-inlineform-option="ui-InlineForm-Option"
+                        ng-class="{'is-selected no-ng-click': option == selectedOption}" ng-click="selectOption(option)"
+                        translate="USD" class="currencycls ng-scope {% if user.reference_currency == 'USD' %}is-selected no-ng-click {% endif %}">USD</div><!-- end ngRepeat: option in options -->
+                    <div onclick="selectCurrency(this)" ng-repeat="option in options" ui-inlineform-option="ui-InlineForm-Option"
+                        ng-class="{'is-selected no-ng-click': option == selectedOption}" ng-click="selectOption(option)"
+                        translate="AUD" class="currencycls ng-scope {% if user.reference_currency == 'AUD' %}is-selected no-ng-click {% endif %}">AUD</div><!-- end ngRepeat: option in options -->
+                    <div onclick="selectCurrency(this)" ng-repeat="option in options" ui-inlineform-option="ui-InlineForm-Option"
+                        ng-class="{'is-selected no-ng-click': option == selectedOption}" ng-click="selectOption(option)"
+                        translate="GBP" class="currencycls ng-scope {% if user.reference_currency == 'GBP' %}is-selected no-ng-click {% endif %}">GBP</div>
+                    <!-- end ngRepeat: option in options -->
+                    <div onclick="selectCurrency(this)" ng-repeat="option in options" ui-inlineform-option="ui-InlineForm-Option"
+                        ng-class="{'is-selected no-ng-click': option == selectedOption}" ng-click="selectOption(option)"
+                        translate="EUR" class="currencycls ng-scope {% if user.reference_currency == 'EUR' %}is-selected no-ng-click {% endif %}">EUR</div><!-- end ngRepeat: option in options -->
+                </dd>
+            </dl><!-- end ngIf: optionsList -->
+            <div ui-form-buttons="pair"><button type="button" ui-btn="cancel" ng-click="stopEditing()"
+                    translate="buttons.cancel" onclick="stopEdit()" class="ng-scope">Cancel</button><button type="button"
+                    ui-btn="its-happening" ng-show="inProgress" translate="buttons.in_progress"
+                    class="ng-scope ng-hide">In progress...</button><button type="button" ui-btn="primary"
+                    ng-disabled="inline.$invalid" onclick="saveCurrency()" ng-hide="inProgress" translate="buttons.save"
+                    class="ng-scope">Save</button></div>
+        </form>
+    </div><!-- end ngIf: !inert && editing -->
+</div>
+      <div kind="options-list" label="Language" object="CurrentUser" field="localeTranslation" state="state"
+        input-type="text" on-error="Must be a valid locale" options="localeOptions" class="ng-isolate-scope">
+        <!-- ngIf: !editing -->
+        <div ui-inlineform="ui-InlineForm" ng-if="!editing" class="ng-scope">
+          <dl ui-inlineform-list="ui-InlineForm-List">
+            <dt translate="Language" class="ng-scope">Language</dt>
+            <dd class="ng-binding">English (US)</dd>
+          </dl><a ng-hide="inert" ng-click="startEditing()" ng-class="{&#39;is-disabled&#39;: state.editing}"
+            translate="components.inline_form.edit" class="ng-scope">edit</a><span ng-show="inert"
+            class="ng-binding ng-hide"></span>
+        </div><!-- end ngIf: !editing -->
+        <!-- ngIf: !inert && editing -->
+      </div><!-- ngIf: CurrentUser.identified -->
+      <footer><span translate="settings.general.reference_currency_help_text" class="ng-scope">Your reference
+          currency helps you compare the value of each of your accounts.</span> <a ui-link="primary underlined"
+          target="_blank" ui-type="unbroken" href="https://support.coinjar.com/hc/en-us/articles/202659959"
+          translate="settings.general.reference_currency_kb_link" class="ng-scope">More about reference
+          currencies</a></footer>
+    </section>
+    <section id="password" ui-dashboardcard="ui-DashboardCard">
+      <header>
+        <h3 translate="settings.password" class="ng-scope">Password</h3>
+      </header>
+      <div kind="change-password" label="settings.password.your_password" object="CurrentUser" field="password"
+        state="state" input-type="text" on-error="Please enter a name" class="ng-isolate-scope">
+        <!-- ngIf: !editing -->
+        <div ui-inlineform="ui-InlineForm" ng-if="!editing" class="ng-scope">
+          <dl ui-inlineform-list="ui-InlineForm-List">
+            <dt translate="settings.password.your_password" class="ng-scope">Your password</dt>
+            <dd class="ng-binding">••••••••</dd>
+          </dl><a ng-hide="inert" ng-click="startEditing()" ng-class="{&#39;is-disabled&#39;: state.editing}"
+            translate="components.inline_form.edit" class="ng-scope">edit</a><span ng-show="inert"
+            class="ng-binding ng-hide"></span>
+        </div><!-- end ngIf: !editing -->
+        <!-- ngIf: !inert && editing -->
+      </div><!-- ngIf: CurrentUser.features.phone_support -->
+    </section>
+    <section id="mfa" ui-dashboardcard="ui-DashboardCard">
+      <header>
+        <h3 translate="settings.enhanced_security" class="ng-scope">Enhanced Security</h3><a ng-click="addMfa()"
+          translate="settings.enhanced_security.add_new_device" class="ng-scope">Add new device</a>
+      </header>
+      <div ng-hide="hidden" ui-spinner="" hide-on="devices" class="ng-scope ng-hide"></div>
+      <!-- ngRepeat: device in devices -->
+      <footer>
+        <p><span translate="settings.enhanced_security.enhanced_security_help_text" class="ng-scope">Link your
+            devices (like your smartphone) to keep your CoinJar secure.</span> <a ui-link="primary underlined"
+            target="_blank" ui-type="unbroken" href="https://support.coinjar.com/hc/en-us/articles/202910075"
+            translate="settings.enhanced_security.enhanced_security_kb_link" class="ng-scope">More about
+            Enhanced Security</a></p>
+      </footer>
+    </section>
+    <section id="mobile-devices" ui-dashboardcard="ui-DashboardCard">
+      <header>
+        <h3 translate="settings.coinjar_touch" class="ng-scope">CoinJar App</h3>
+      </header>
+      <div ng-hide="hidden" ui-spinner="" hide-on="mobileDevices" class="ng-scope ng-hide"></div>
+      <!-- ngRepeat: mobileDevice in mobileDevices -->
+      <footer>
+        <p> <span translate="settings.coinjar_touch.coinjar_touch_help_text" class="ng-scope">Access your
+            CoinJar on the go with our iOS and Android apps.</span> <a ui-link="primary underlined"
+            target="_blank" ui-type="unbroken" href="https://support.coinjar.com/hc/en-us/articles/360032808871"
+            translate="settings.coinjar_touch.coinjar_touch_kb_link" class="ng-scope">More about CoinJar app</a>
+        </p>
+      </footer>
+    </section><!-- ngIf: CurrentUser.features.credit_cards -->
+    <!-- ngIf: CurrentUser.features.bank_accounts -->
+    <section ui-dashboardcard="ui-DashboardCard">
+      <header>
+        <h3>Tax Settings</h3>
+      </header>
+      <div kind="abn" label="ABN" object="CurrentUser" field="taxIdABN" state="state" input-type="text"
+        inert-if="CurrentUser.taxIdABN != &#39;Not Provided&#39;" class="ng-isolate-scope">
+        <!-- ngIf: !editing -->
+        <div ui-inlineform="ui-InlineForm" ng-if="!editing" class="ng-scope">
+          <dl ui-inlineform-list="ui-InlineForm-List">
+            <dt translate="ABN" class="ng-scope">ABN</dt>
+            <dd class="ng-binding">Not Provided</dd>
+          </dl><a ng-hide="inert" ng-click="startEditing()" ng-class="{&#39;is-disabled&#39;: state.editing}"
+            translate="components.inline_form.edit" class="ng-scope">edit</a><span ng-show="inert"
+            class="ng-binding ng-hide"></span>
+        </div><!-- end ngIf: !editing -->
+        <!-- ngIf: !inert && editing -->
+      </div>
+      <div ui-inlineform="clickable">
+        <dl ui-inlineform-list="ui-InlineForm-List">
+          <dt>Data Export</dt>
+          <dd>Purchases and Sales (CSV)</dd>
+        </dl>
+        <div ui-type="14pt right" ui-layout="p1" ui-flex-child="shrink-1"><a
+            ng-hide="downloadingPurchaseAndSalesCSV" ng-click="downloadPurchaseAndSalesCSV()"
+            ui-link="primary underlined" ui-flex-child="shrink-0">download</a><a
+            ng-show="downloadingPurchaseAndSalesCSV" ng-click="downloadPurchaseAndSalesCSV()" ui-type="grey"
+            ui-flex-child="shrink-0" class="ng-hide">generating report...</a></div>
+      </div>
+      <div ui-inlineform="clickable">
+        <dl ui-inlineform-list="ui-InlineForm-List">
+          <dt>Data Export</dt>
+          <dd>Deposits and Withdrawals (CSV)</dd>
+        </dl>
+        <div ui-type="14pt right" ui-layout="p1" ui-flex-child="shrink-1"><a
+            ng-hide="downloadingDepositsAndWithdrawalsCSV" ng-click="downloadDepositsAndWithdrawalsCSV()"
+            ui-link="primary underlined" ui-flex-child="shrink-0">download</a><a
+            ng-show="downloadingDepositsAndWithdrawalsCSV" ng-click="downloadDepositsAndWithdrawalsCSV()"
+            ui-type="grey" ui-flex-child="shrink-0" class="ng-hide">generating report...</a></div>
+      </div>
+      <footer><span>If you are an Australian-based business recipient, please provide your ABN to qualify for
+          tax-exempt services.</span></footer>
+    </section>
+    <section id="limits" ui-dashboardcard="ui-DashboardCard">
+      <header>
+        <h3 translate="settings.your_usage" class="ng-scope">Your Usage</h3>
+      </header>
+      <div ng-hide="hidden" ui-spinner="" hide-on="limits" class="ng-scope ng-hide"></div>
+      <!-- ngRepeat: limit in limits | limitTo:nrLimitsShown -->
+      <div ui-userlimit="ui-UserLimit" limit="limit" ng-repeat="limit in limits | limitTo:nrLimitsShown"
+        class="ng-scope ng-isolate-scope">
+        <div ui-flex="align-center space-between">
+          <h4 ui-userlimit-name="ui-UserLimit-Name" class="ng-binding">Receive with Bitcoin address</h4>
+          <div ui-userlimit-amounts="ui-UserLimit-Amounts"><span currency-amount="used"
+              class="ng-binding ng-isolate-scope"><span ui-amount="USD " class="ng-binding">0.00</span></span> /
+            <span currency-amount="cap" ui-amount="secondary" full-rounding="full-rounding"
+              class="ng-binding ng-isolate-scope"><span ui-amount="USD " class="ng-binding">50,000</span></span>
+            <span ui-userlimit-period="ui-UserLimit-Period" class="ng-binding">(Daily)</span></div>
+        </div>
+        <div ui-userlimit-bar="ui-UserLimit-Bar">
+          <div ui-userlimit-bar="inner" ng-style="{width: width}" ng-class="progressClass" class="is-good"
+            style="width: 0%;"></div>
+        </div>
+      </div><!-- end ngRepeat: limit in limits | limitTo:nrLimitsShown -->
+      <div ui-userlimit="ui-UserLimit" limit="limit" ng-repeat="limit in limits | limitTo:nrLimitsShown"
+        class="ng-scope ng-isolate-scope">
+        <div ui-flex="align-center space-between">
+          <h4 ui-userlimit-name="ui-UserLimit-Name" class="ng-binding">Transfer between CoinJar accounts</h4>
+          <div ui-userlimit-amounts="ui-UserLimit-Amounts"><span currency-amount="used"
+              class="ng-binding ng-isolate-scope"><span ui-amount="USD " class="ng-binding">0.00</span></span> /
+            <span currency-amount="cap" ui-amount="secondary" full-rounding="full-rounding"
+              class="ng-binding ng-isolate-scope"><span ui-amount="USD " class="ng-binding">2,000</span></span>
+            <span ui-userlimit-period="ui-UserLimit-Period" class="ng-binding">(Daily)</span></div>
+        </div>
+        <div ui-userlimit-bar="ui-UserLimit-Bar">
+          <div ui-userlimit-bar="inner" ng-style="{width: width}" ng-class="progressClass" class="is-good"
+            style="width: 0%;"></div>
+        </div>
+      </div><!-- end ngRepeat: limit in limits | limitTo:nrLimitsShown -->
+      <div ui-form-buttons="single" ng-show="nrLimitsShown &lt; limits.length" class="ng-hide"><button
+          type="button" ui-btn="secondary" ng-click="nrLimitsShown = limits.length" class="ng-binding">See all
+          limits</button></div>
+      <footer ng-hide="nrLimitsShown &lt; limits.length"><span
+          translate="settings.your_usage.your_usage_help_text" class="ng-scope">CoinJar applies account limits
+          to ensure the security of your account.</span> <a ui-link="primary underlined" target="_blank"
+          ui-type="unbroken" href="https://support.coinjar.com/hc/en-us/articles/201555175"
+          translate="settings.your_usage.your_usage_kb_link" class="ng-scope">More about account limits</a>
+      </footer>
+    </section>
+  </div>
+  <script>
+      function startEdit() {
+          $("#currencyEditShow")[0].style = "display:block"
+          $("#currencyEditHide")[0].style = "display:none"
+      }
+      function stopEdit() {
+          $("#currencyEditShow")[0].style = "display:none"
+          $("#currencyEditHide")[0].style = "display:block"
+      }
+      var currencySelected = null
+      function selectCurrency(el) {
+        console.log(el)
+        $(".is-selected")[0].className = "currencycls ng-scope"
+        el.className = "currencycls ng-scope is-selected no-ng-click"
+        currencySelected = el.innerText
+      }
+      function saveCurrency(){
+          window.location.href = `/settings/?currency=${currencySelected}`
+      }
+  </script>
+{% endblock %}

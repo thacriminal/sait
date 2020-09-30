@@ -1,0 +1,1016 @@
+{% extends 'base.html' %}
+{% block content %}
+<div ui-dashboardcolumn="ui-DashboardColumn">
+    <section ui-dashboardcard="ui-DashboardCard" aria-label="payments">
+        <div ui-tabbar="ui-TabBar" ui-flex="vertical"
+            tabs="payments.tabs.pay|payments.tabs.request|payments.tabs.transfer" initial="payments.tabs.pay">
+            <nav ui-flex="ui-flex">
+                <!-- ngRepeat: tab in tabs --><a ng-repeat="tab in tabs" ng-click="setTab(tab)"
+                    ng-class="{&#39;no-ng-click&#39;: tab == currentTab}" ui-flex-child="1/3 stretch"
+                    ui-flex="align-center center" href='/payments/' ui-btn="tab {% if tab_index == None %}active{% endif %}"
+                    class="ng-binding ng-scope">
+                    Send
+                    <!-- ngIf: tab == 'quick_deposit.tabs.npp' || tab == 'quick_deposit.tabs.blueshyft' --></a>
+                <!-- end ngRepeat: tab in tabs --><a ng-repeat="tab in tabs" href='/payments/?tab=request' ng-click="setTab(tab)"
+                    ng-class="{&#39;no-ng-click&#39;: tab == currentTab}" ui-flex-child="1/3 stretch"
+                    ui-flex="align-center center" ui-btn="tab {% if tab_index == 'request' %}active{% endif %}"
+                    class="ng-binding ng-scope">
+                    Request
+                    <!-- ngIf: tab == 'quick_deposit.tabs.npp' || tab == 'quick_deposit.tabs.blueshyft' --></a>
+                <!-- end ngRepeat: tab in tabs --><a ng-repeat="tab in tabs" href='/payments/?tab=transfer' ng-click="setTab(tab)"
+                    ng-class="{&#39;no-ng-click&#39;: tab == currentTab}" ui-flex-child="1/3 stretch"
+                    ui-flex="align-center center" ui-btn="tab {% if tab_index == 'transfer' %}active{% endif %}"
+                    class="ng-binding ng-scope">
+                    Transfer
+                    <!-- ngIf: tab == 'quick_deposit.tabs.npp' || tab == 'quick_deposit.tabs.blueshyft' --></a>
+                <!-- end ngRepeat: tab in tabs -->
+            </nav>
+            <div tab="payments.tabs.pay" class="ng-scope">
+                <!-- ngIf: currentTab == tab -->
+                <div ng-if="currentTab == tab" class="ng-scope">
+                    <div ng-transclude="">
+                        <div type="pay" initial-state="payState" pay-mode="crypto" class="ng-scope ng-isolate-scope">
+                            {% if tab_index == None %}
+                            <form novalidate="" ui-paymentform="pay" name="pay" autocomplete="off"
+                                class="ng-pristine ng-scope ng-invalid ng-invalid-required ng-valid-pattern">
+                                <header ui-payment-alert-header="" ng-show="" class="ng-scope ng-hide">
+                                    <div ui-illustration="medium "></div>
+                                    <div ui-payment-alert-details="ui-Payment-Alert-Details">
+                                        <h3 class="ng-binding"></h3>
+                                        <p class="ng-binding"></p>
+                                    </div>
+                                </header>
+                                <div ui-paymentform-field="ui-PaymentForm-Field"
+                                    ng-class="{&#39;is-open&#39;: view.isOpen}" form="pay" field="from" type="crypto"
+                                    initial="" class="ng-scope ng-isolate-scope">
+                                    <div ui-accountselector="ui-AccountSelector">
+                                        <header>
+                                            <!-- ngIf: view.formName --><span ui-type="unbroken"
+                                                translate="payments.fields.pay.from" ng-if="view.formName"
+                                                class="ng-scope">Send from:</span><!-- end ngIf: view.formName --><a
+                                                ui-type="14pt right link" ui-link="ui-link" ng-click="switchPayMode()"
+                                                ng-show="switchPayModeEnabled" class="ng-hide">Pay a CoinJar user or
+                                                Bitcoin address</a></header>
+                                        <!-- Normal case. Placeholder, tile & dropdown-->
+                                        <!-- ngIf: view.otherAccounts -->
+                                        <div ui-accountselector-chooser="ui-AccountSelector-Chooser"
+                                            ng-if="view.otherAccounts" class="ng-scope">
+                                            <!-- ngIf: !view.account -->
+                                            <div ui-accounttile="ui-AccountTile" id="uiTitle" onclick="selectCurrency()"
+                                                account="view.placeholder" ng-if="!view.account"
+                                                ng-click="!view.noClick &amp;&amp; view.toggleOpen()"
+                                                class="ng-scope ng-isolate-scope">
+                                                <div ui-accountimage="" background-image="imageUrl" ng-class="classes"
+                                                    ng-bind="fallbackInitials" for="account"
+                                                    class="ng-binding ng-isolate-scope"
+                                                    style="background-image: url(&quot;https://assets.coinjar.com/images/illustrations/illu__account__coinjar--no-account-e6047e7c39.svg&quot;);">
+                                                </div>
+                                                <div ui-accounttile-details="ui-AccountTile-Details">
+                                                    <div ui-accounttile-name="ui-AccountTile-Name" class="ng-binding">
+                                                        Select account...
+                                                    </div>
+                                                    <div ui-accounttile-description="ui-AccountTile-Description"
+                                                        class="ng-binding">
+                                                    </div>
+                                                </div>
+                                                <div ng-switch="account.type">
+                                                    <!-- ngSwitchWhen: hedged_bucket -->
+                                                    <!-- ngSwitchWhen: swipe -->
+                                                    <!-- ngSwitchWhen: swipe_preload -->
+                                                    <!-- ngSwitchWhen: reward_inactive -->
+                                                    <!-- ngSwitchWhen: reward -->
+                                                    <!-- ngSwitchDefault: ng-switch-default -->
+                                                    <div ng-switch-default="ng-switch-default" class="ng-scope">
+                                                        <!-- ngIf: account.balance -->
+                                                    </div><!-- end ngSwitchWhen: -->
+                                                </div>
+                                            </div><!-- end ngIf: !view.account -->
+                                            <!-- ngIf: view.account -->
+                                            <div id="listArrow"
+                                                ui-accounttransactionhistory-dropdown="ui-AccountTransactionHistory-Dropdown"
+                                                ng-hide="view.noDropdown" ng-class="{'is-open': view.isOpen}"
+                                                ui-flex-child="shrink-0" class="">
+                                                <div ui-accounttransactionhistory-downarrow="ui-AccountTransactionHistory-DownArrow"
+                                                    ng-show="view.otherAccounts.length > 0" ng-click="view.toggleOpen()"
+                                                    onclick="selectCurrency()"></div><!-- ngIf: view.isOpen -->
+                                                <nav ng-if="view.isOpen" id="listData" class="ng-scope ng-hide">
+                                                    <!-- ngRepeat: a in view.otherAccounts -->
+                                                    {% for i in user_currency %}
+                                                    <div ui-accounttile="ui-AccountTile"
+                                                        onclick="listSelectCurrency(this)"
+                                                        ng-repeat="account in accounts" account="account"
+                                                        ng-click="routeDefaultAction(account)"
+                                                        ng-class="{&#39;no-ng-click&#39;: !account.properties.statement &amp;&amp; account.type != &#39;exchange&#39;}"
+                                                        class="ng-isolate-scope">
+                                                        <div ui-accountimage="" background-image="imageUrl"
+                                                            ng-class="classes" ng-bind="fallbackInitials" for="account"
+                                                            class="ng-binding ng-isolate-scope"
+                                                            style="background-image: url(&quot;/static/currency/illu__accounts__{{i.simbol|lower}}.svg&quot;);">
+                                                        </div>
+                                                        <div ui-accounttile-details="ui-AccountTile-Details">
+                                                            <div ui-accounttile-name="ui-AccountTile-Name"
+                                                                class="ng-binding">Everyday
+                                                                {{i.name}}</div>
+                                                            <div ui-accounttile-description="ui-AccountTile-Description"
+                                                                class="ng-binding">
+                                                                {{i.slug}}</div>
+                                                        </div>
+                                                        <div ng-switch="account.type">
+                                                            <!-- ngSwitchWhen: hedged_bucket -->
+                                                            <!-- ngSwitchWhen: swipe -->
+                                                            <!-- ngSwitchWhen: swipe_preload -->
+                                                            <!-- ngSwitchWhen: reward_inactive -->
+                                                            <!-- ngSwitchWhen: reward -->
+                                                            <!-- ngSwitchDefault: ng-switch-default -->
+                                                            <div ng-switch-default="ng-switch-default" class="ng-scope">
+                                                                <!-- ngIf: account.balance -->
+                                                                <div ui-accounttile-balance="ui-AccountTile-Balance"
+                                                                    ng-if="account.balance" class="ng-scope"><span
+                                                                        ui-amount="primary"
+                                                                        currency-amount="account.balance" no-rounding=""
+                                                                        class="ng-binding ng-isolate-scope"><span
+                                                                            ui-amount="{{i.simbol}} "
+                                                                            class="ng-binding">{{i.balance|stringformat:".4f"}}</span></span>
+                                                                    <div class="computed-amount ng-binding ng-isolate-scope"
+                                                                        ng-show="amount.currency != to"
+                                                                        ui-amount="secondary USD" ng-class="flashClass"
+                                                                        amount="account.balance">{{i.balance_usd|stringformat:".4f"}}</div>
+                                                                </div><!-- end ngIf: account.balance -->
+                                                            </div><!-- end ngSwitchWhen: -->
+                                                        </div>
+                                                    </div>
+                                                    {% endfor %}
+                                                </nav><!-- end ngIf: view.isOpen -->
+                                            </div>
+                                        </div><!-- end ngIf: view.otherAccounts -->
+                                        <!-- If we don't have any alternatives, don't even have the dropdown-->
+                                        <!-- ngIf: !view.otherAccounts -->
+                                    </div>
+                                </div><!-- ngIf: payMode == 'crypto' -->
+                                <div ui-paymentform-field="ui-PaymentForm-Field" form="pay" field="to" allowed="crypto"
+                                    ng-if="payMode == &#39;crypto&#39;" initial=""
+                                    switch-pay-mode="setPayMode(&#39;bpay&#39;)" class="ng-scope ng-isolate-scope">
+                                    <header><span ui-type="unbroken" class="ng-binding">Send to:</span><span
+                                            ui-type="warning right" ng-show="view.error"
+                                            class="ng-binding ng-hide"></span><span ui-type="right"
+                                            ng-show="view.searching" class="ng-hide">Checking address...</span>
+                                    </header>
+                                    <form ui-paymentform-address="ui-PaymentForm-Address"
+                                        ng-class="{&#39;is-focussed&#39;: view.isFocussed}"
+                                        ng-submit="view.chooseContact()" class="ng-pristine ng-valid">
+                                        <div ui-accountimage="" background-image="imageUrl" ng-class="classes"
+                                            ng-bind="fallbackInitials" for="view.chosenContact" ui-flex-child="shrink-0"
+                                            class="ng-binding ng-isolate-scope"
+                                            style='position: absolute;left: 1.1rem;background-image: url("https://assets.coinjar.com/images/illustrations/illu__account__user--no-photo-34dc2a1c88.svg");'>
+                                        </div><input id="contactInput" onfocus="selectContact(true)"
+                                            onblur="selectContact(false)" style="margin-left: 3.7rem;width: 80%;"
+                                            ui-input="contact" name="contactInput" ng-model="view.address"
+                                            placeholder="Enter contact name or digital currency address"
+                                            autocomplete="off" ng-focus="view.focus()" ng-blur="view.blur()"
+                                            class="ng-pristine ng-untouched ng-valid ng-empty">
+                                        <div id="accountDropdown"
+                                            ui-paymentform-address-dropdown="ui-PaymentForm-Address-Dropdown"
+                                            ng-show="view.isFocussed" clicks-before-blurs="clicks-before-blurs"
+                                            class="ng-hide">
+                                            <!-- ngRepeat: contact in view.filteredContacts -->
+                                            {% for i in contact_list %}
+                                            <div onclick="curSelectContact(this)"
+                                                ui-accounttile="contact ui-AccountTile" ng-repeat="contact in contacts"
+                                                ng-click="editContact(contact)" class="ng-scope">
+                                                <div ui-accountimage="" background-image="imageUrl" ng-class="classes"
+                                                    ng-bind="fallbackInitials" for="contact"
+                                                    class="ng-binding ng-isolate-scope is-fallback">
+                                                    {{i.full_name|title|slice:"0:1"}}</div>
+                                                <div ui-accounttile-details="ui-AccountTile-Details">
+                                                    <div ui-accounttile-name="ui-AccountTile-Name" class="ng-binding">
+                                                        {{i.full_name}}</div>
+                                                    <div ui-accounttile-description="ui-AccountTile-Description"
+                                                        class="ng-binding">{{i.contact_user.userlogin}}</div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                            <div ng-hide="hidden" ui-spinner="" hide-on="view.contacts"
+                                                class="ng-scope ng-hide"></div>
+                                        </div>
+                                    </form>
+                                </div><!-- end ngIf: payMode == 'crypto' -->
+                                <!-- ngIf: showDestinationTag() -->
+                                <!-- ngIf: showMemoId() -->
+                                <!-- ngIf: payMode == 'bpay' -->
+                                <div form="pay" field="amount" behaviour="payment" initial=""
+                                    class="ng-scope ng-isolate-scope">
+                                    <div ui-paymentform-field="ui-PaymentForm-Field">
+                                        <header><span translate="payments.fields.amount" class="ng-scope">Amount:</span>
+                                        </header>
+                                        <div ui-paymentamount="ui-PaymentAmount">
+                                            <div ui-paymentamount-amount="ui-PaymentAmount-Amount">
+                                                <div ui-paymentamount-input="ui-PaymentAmount-Input"><input
+                                                        oninput="amountInput(this.value)"
+                                                        ng-model="value" name="amount" type="text" inputmode="numeric"
+                                                        placeholder="0" ng-pattern="/^[0-9\.,]+$/" required="required"
+                                                        autocomplete="off"
+                                                        class="ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required ng-valid-pattern">
+                                                    <div ui-paymentamount-currency="ui-PaymentAmount-Currency"
+                                                        class="ng-binding" id="currentCurency">BTC
+                                                    </div>
+                                                </div>
+                                                <div ui-paymentamount-feeinformation="ui-PaymentAmount-FeeInformation"
+                                                    ng-show="feeQuote" class="ng-hide"><span ui-amount=""
+                                                        currency-amount="form.state.equivalence"
+                                                        ng-show="currencies.length &gt; 1"
+                                                        class="ng-binding ng-isolate-scope ng-hide"><span ui-amount=" "
+                                                            class="ng-binding"> - </span></span>
+                                                    <div ui-type="14pt" ng-show="feeQuote.feePercentage"
+                                                        translate="payments.fields.excluding_fee"
+                                                        translate-values="{percentage: feeQuote.feePercentage}"
+                                                        class="ng-scope ng-hide">
+                                                        (excluding % fee)</div>
+                                                </div>
+                                            </div>
+                                            <div ui-paymentamount-currencytoggle="ui-PaymentAmount-CurrencyToggle"
+                                                ng-show="currencies.length &gt; 1" ng-click="toggleCurrency()"
+                                                ui-flex-child="shrink-0" class="ng-hide">
+                                                <div svg-icon="icon__currency--switcher" ui-svg="no-circle large"
+                                                    class="ng-isolate-scope"><svg viewBox="0 0 320 320"
+                                                        xmlns="http://www.w3.org/2000/svg" class="svg-icon">
+                                                        <g id="icon__currency--switcher" stroke-linecap="round"
+                                                            stroke="currentColor" class="stroke-width-6"
+                                                            stroke-linejoin="round">
+                                                            <g id="Stroke-1251-+-Stroke-1252"
+                                                                transform="translate(137.000000, 130.500000) rotate(-180.000000) translate(-137.000000, -130.500000) translate(55.000000, 83.000000)">
+                                                                <polyline id="Stroke-1251"
+                                                                    transform="translate(135.309825, 20.452093) rotate(-2.000000) translate(-135.309825, -20.452093) "
+                                                                    points="163.409123 39.9274419 137.281053 0.976744186 107.210526 36.987907">
+                                                                </polyline>
+                                                                <path
+                                                                    d="M136.038316,1.97674419 C143.279789,44.3246512 114.455228,83.9302326 74.7331228,93.3218605 C47.0243509,99.8818605 19.241193,91.0855814 0.350877193,72.4548837"
+                                                                    id="Stroke-1252"></path>
+                                                            </g>
+                                                            <g id="Stroke-1251-+-Stroke-1252"
+                                                                transform="translate(101.000000, 143.000000)">
+                                                                <polyline id="Stroke-1251"
+                                                                    transform="translate(135.309825, 24.452093) rotate(-2.000000) translate(-135.309825, -24.452093) "
+                                                                    points="163.409123 43.9274419 137.281053 4.97674419 107.210526 40.987907">
+                                                                </polyline>
+                                                                <path
+                                                                    d="M136.038316,5.97674419 C143.279789,48.3246512 114.455228,87.9302326 74.7331228,97.3218605 C47.0243509,103.88186 19.241193,95.0855814 0.350877193,76.4548837"
+                                                                    id="Stroke-1252"></path>
+                                                                <path
+                                                                    d="M72.1495789,32.1595349 C64.8857895,39.4190698 53.1104912,39.4190698 45.8504211,32.1595349 C38.5866316,24.8925581 38.5866316,13.112093 45.8504211,5.83767442 C53.1104912,-1.41813953 64.8857895,-1.41813953 72.1495789,5.83767442 C79.4133684,13.112093 79.4133684,24.8925581 72.1495789,32.1595349 L72.1495789,32.1595349 Z"
+                                                                    id="Stroke-1254"></path>
+                                                            </g>
+                                                        </g>
+                                                    </svg></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="from" ng-model="state.from.address" required=""
+                                    autocomplete="off"
+                                    class="ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required">
+                                <input type="hidden" name="from" ng-model="state.to.address" required=""
+                                    autocomplete="off"
+                                    class="ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required">
+                                <div ui-form-buttons="stacked no-background increased-padding">
+                                    <div ng-show="errorMessage" ui-paymentform-error="" class="ng-binding ng-hide">
+                                    </div>
+                                    <div ng-show="errorLink" ui-paymentform-error="" class="ng-hide"><a
+                                            href="https://app.coinjar.com/">Learn more about this error</a></div>
+                                    <button type="submit" id="confirmBtn" ui-btn="primary" ng-disabled="pay.$invalid"
+                                        ng-click="submit()" ng-hide="submitted" translate="buttons.review_confirm"
+                                        class="ng-scope" onclick="successTransaction()" disabled="disabled">Review and confirm</button>
+                                    <button type="button" ui-btn="its-happening" ng-show="submitted"
+                                        translate="buttons.in_progress" class="ng-scope ng-hide">In progress...</button>
+                                    <a ui-link="underlined" onclick="window.location.href='/payments/'"
+                                        ng-click="resetForm()" ng-hide="hideCancel" ui-type="14pt"
+                                        translate="buttons.cancel" class="ng-scope">Cancel</a>
+                                </div>
+                            </form>
+                            {% endif %}
+                            {% if tab_index == 'request' %}
+                            <form novalidate="" ui-paymentform="request" name="request" autocomplete="off"
+                                class="ng-pristine ng-scope ng-invalid ng-invalid-required ng-valid-pattern">
+                                <header ui-payment-alert-header="" ng-show="" class="ng-scope ng-hide">
+                                    <div ui-illustration="medium "></div>
+                                    <div ui-payment-alert-details="ui-Payment-Alert-Details">
+                                        <h3 class="ng-binding"></h3>
+                                        <p class="ng-binding"></p>
+                                    </div>
+                                </header>
+                                <div ui-paymentform-field="ui-PaymentForm-Field" ng-class="{'is-open': view.isOpen}"
+                                    form="request" field="to" default-only="default-only" nodropdown="true"
+                                    noclick="true" class="ng-isolate-scope">
+                                    <div ui-accountselector="ui-AccountSelector">
+                                        <header>
+                                            <!-- ngIf: view.formName --><span ui-type="unbroken"
+                                                translate="payments.fields.request.to" ng-if="view.formName"
+                                                class="ng-scope">Send to:</span><!-- end ngIf: view.formName --><a
+                                                ui-type="14pt right link" ui-link="ui-link" ng-click="switchPayMode()"
+                                                ng-show="switchPayModeEnabled" class="ng-hide">Pay a CoinJar user or
+                                                Bitcoin address</a></header>
+                                        <!-- Normal case. Placeholder, tile & dropdown-->
+                                        <!-- ngIf: view.otherAccounts -->
+                                        <div ui-accountselector-chooser="ui-AccountSelector-Chooser"
+                                            ng-if="view.otherAccounts" class="ng-scope">
+                                            <!-- ngIf: !view.account -->
+                                            <!-- ngIf: view.account -->
+                                            <div ui-accounttile="ui-AccountTile" account="view.account"
+                                                ng-if="view.account"
+                                                ng-click="!view.noClick &amp;&amp; view.toggleOpen()"
+                                                no-rounding="no-rounding" class="ng-isolate-scope">
+                                                <div ui-accountimage="" background-image="imageUrl" ng-class="classes"
+                                                    ng-bind="fallbackInitials" for="account"
+                                                    class="ng-binding ng-isolate-scope"
+                                                    style="background-image: url(&quot;https://assets.coinjar.com/images/illustrations/illu__accounts__bitcoin-4f236540d4.svg&quot;);">
+                                                </div>
+                                                <div ui-accounttile-details="ui-AccountTile-Details">
+                                                    <div ui-accounttile-name="ui-AccountTile-Name" class="ng-binding">
+                                                        Everyday Bitcoin</div>
+                                                    <div ui-accounttile-description="ui-AccountTile-Description"
+                                                        class="ng-binding">Bitcoin</div>
+                                                </div>
+                                                <div ng-switch="account.type">
+                                                    <!-- ngSwitchWhen: hedged_bucket -->
+                                                    <!-- ngSwitchWhen: swipe -->
+                                                    <!-- ngSwitchWhen: swipe_preload -->
+                                                    <!-- ngSwitchWhen: reward_inactive -->
+                                                    <!-- ngSwitchWhen: reward -->
+                                                    <!-- ngSwitchDefault: ng-switch-default -->
+                                                    <div ng-switch-default="ng-switch-default" class="ng-scope">
+                                                        <!-- ngIf: account.balance -->
+                                                        <div ui-accounttile-balance="ui-AccountTile-Balance"
+                                                            ng-if="account.balance" class="ng-scope"><span
+                                                                ui-amount="primary" currency-amount="account.balance"
+                                                                no-rounding="no-rounding"
+                                                                class="ng-binding ng-isolate-scope"><span
+                                                                    ui-amount="BTC "
+                                                                    class="ng-binding">{{currency_btc.balance|stringformat:".4f"}}</span></span>
+                                                            <div class="computed-amount ng-binding ng-isolate-scope"
+                                                                ng-show="amount.currency != to"
+                                                                ui-amount="secondary USD" ng-class="flashClass"
+                                                                amount="account.balance">{{currency_btc.balance_usd|stringformat:".2f"}}</div>
+                                                        </div><!-- end ngIf: account.balance -->
+                                                    </div><!-- end ngSwitchWhen: -->
+                                                </div>
+                                            </div><!-- end ngIf: view.account -->
+                                            <div ui-accounttransactionhistory-dropdown="ui-AccountTransactionHistory-Dropdown"
+                                                ng-hide="view.noDropdown" ng-class="{'is-open': view.isOpen}"
+                                                ui-flex-child="shrink-0" class="ng-hide">
+                                                <div ui-accounttransactionhistory-downarrow="ui-AccountTransactionHistory-DownArrow"
+                                                    ng-show="view.otherAccounts.length > 0"
+                                                    ng-click="view.toggleOpen()"></div><!-- ngIf: view.isOpen -->
+                                            </div>
+                                        </div><!-- end ngIf: view.otherAccounts -->
+                                        <!-- If we don't have any alternatives, don't even have the dropdown-->
+                                        <!-- ngIf: !view.otherAccounts -->
+                                    </div>
+                                </div>
+                                <div ui-paymentform-field="ui-PaymentForm-Field" form="request" field="from"
+                                    allowed="email" class="ng-isolate-scope">
+                                    <header><span ui-type="unbroken" class="ng-binding">Request from:</span><span
+                                            ui-type="warning right" ng-show="view.error"
+                                            class="ng-binding ng-hide"></span><span ui-type="right"
+                                            ng-show="view.searching" class="ng-hide">Checking address...</span></header>
+                                    <form ui-paymentform-address="ui-PaymentForm-Address"
+                                        ng-class="{'is-focussed': view.isFocussed}" ng-submit="view.chooseContact()"
+                                        class="ng-pristine ng-valid">
+                                        <div ui-accountimage="" background-image="imageUrl" ng-class="classes"
+                                            ng-bind="fallbackInitials" for="view.chosenContact" ui-flex-child="shrink-0"
+                                            class="ng-binding ng-isolate-scope"
+                                            style="position: absolute;left: 1.1rem;background-image: url(&quot;https://assets.coinjar.com/images/illustrations/illu__account__user--no-photo-34dc2a1c88.svg&quot;);">
+                                        </div><input id="contactInput" onfocus="selectContact(true)"
+                                            onblur="selectContact(false)" style="margin-left: 3.7rem;width: 80%;"
+                                            ui-input="contact" name="contactInput" ng-model="view.address"
+                                            placeholder="Enter contact name or digital currency address"
+                                            autocomplete="off" ng-focus="view.focus()" ng-blur="view.blur()"
+                                            class="ng-pristine ng-untouched ng-valid ng-empty">
+                                        <div id="accountDropdown"
+                                            ui-paymentform-address-dropdown="ui-PaymentForm-Address-Dropdown"
+                                            ng-show="view.isFocussed" clicks-before-blurs="clicks-before-blurs"
+                                            class="ng-hide">
+                                            <!-- ngRepeat: contact in view.filteredContacts -->
+                                            {% for i in contact_list %}
+                                            <div onclick="curSelectContact(this)"
+                                                ui-accounttile="contact ui-AccountTile" ng-repeat="contact in contacts"
+                                                ng-click="editContact(contact)" class="ng-scope">
+                                                <div ui-accountimage="" background-image="imageUrl" ng-class="classes"
+                                                    ng-bind="fallbackInitials" for="contact"
+                                                    class="ng-binding ng-isolate-scope is-fallback">
+                                                    {{i.full_name|title|slice:"0:1"}}</div>
+                                                <div ui-accounttile-details="ui-AccountTile-Details">
+                                                    <div ui-accounttile-name="ui-AccountTile-Name" class="ng-binding">
+                                                        {{i.full_name}}</div>
+                                                    <div ui-accounttile-description="ui-AccountTile-Description"
+                                                        class="ng-binding">{{i.contact_user.userlogin}}</div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                            <div ng-hide="hidden" ui-spinner="" hide-on="view.contacts"
+                                                class="ng-scope ng-hide"></div>
+                                        </div>
+                                            <div ng-hide="hidden" ui-spinner="" hide-on="view.contacts"
+                                                class="ng-scope ng-hide"></div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div form="request" field="amount" step="3" behaviour="request"
+                                    class="ng-isolate-scope">
+                                    <div ui-paymentform-field="ui-PaymentForm-Field">
+                                        <header><span translate="payments.fields.amount" class="ng-scope">Amount:</span>
+                                        </header>
+                                        <div ui-paymentamount="ui-PaymentAmount">
+                                            <div ui-paymentamount-amount="ui-PaymentAmount-Amount">
+                                                <div ui-paymentamount-input="ui-PaymentAmount-Input"><input
+                                                        ng-model="value" name="amount" type="text" inputmode="numeric"
+                                                        placeholder="0" ng-pattern="/^[0-9\.,]+$/" required="required"
+                                                        autocomplete="off"
+                                                        class="ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required ng-valid-pattern">
+                                                    <div ui-paymentamount-currency="ui-PaymentAmount-Currency"
+                                                        class="ng-binding">BTC</div>
+                                                </div>
+                                                <div ui-paymentamount-feeinformation="ui-PaymentAmount-FeeInformation"
+                                                    ng-show="feeQuote" class="ng-hide"><span ui-amount=""
+                                                        currency-amount="form.state.equivalence"
+                                                        ng-show="currencies.length > 1"
+                                                        class="ng-binding ng-isolate-scope ng-hide"><span ui-amount=" "
+                                                            class="ng-binding"> - </span></span>
+                                                    <div ui-type="14pt" ng-show="feeQuote.feePercentage"
+                                                        translate="payments.fields.excluding_fee"
+                                                        translate-values="{percentage: feeQuote.feePercentage}"
+                                                        class="ng-scope ng-hide">(excluding % fee)</div>
+                                                </div>
+                                            </div>
+                                            <div ui-paymentamount-currencytoggle="ui-PaymentAmount-CurrencyToggle"
+                                                ng-show="currencies.length > 1" ng-click="toggleCurrency()"
+                                                ui-flex-child="shrink-0" class="ng-hide">
+                                                <div svg-icon="icon__currency--switcher" ui-svg="no-circle large"
+                                                    class="ng-isolate-scope"><svg viewBox="0 0 320 320"
+                                                        xmlns="http://www.w3.org/2000/svg" class="svg-icon">
+                                                        <g id="icon__currency--switcher" stroke-linecap="round"
+                                                            stroke="currentColor" class="stroke-width-6"
+                                                            stroke-linejoin="round">
+                                                            <g id="Stroke-1251-+-Stroke-1252"
+                                                                transform="translate(137.000000, 130.500000) rotate(-180.000000) translate(-137.000000, -130.500000) translate(55.000000, 83.000000)">
+                                                                <polyline id="Stroke-1251"
+                                                                    transform="translate(135.309825, 20.452093) rotate(-2.000000) translate(-135.309825, -20.452093) "
+                                                                    points="163.409123 39.9274419 137.281053 0.976744186 107.210526 36.987907">
+                                                                </polyline>
+                                                                <path
+                                                                    d="M136.038316,1.97674419 C143.279789,44.3246512 114.455228,83.9302326 74.7331228,93.3218605 C47.0243509,99.8818605 19.241193,91.0855814 0.350877193,72.4548837"
+                                                                    id="Stroke-1252"></path>
+                                                            </g>
+                                                            <g id="Stroke-1251-+-Stroke-1252"
+                                                                transform="translate(101.000000, 143.000000)">
+                                                                <polyline id="Stroke-1251"
+                                                                    transform="translate(135.309825, 24.452093) rotate(-2.000000) translate(-135.309825, -24.452093) "
+                                                                    points="163.409123 43.9274419 137.281053 4.97674419 107.210526 40.987907">
+                                                                </polyline>
+                                                                <path
+                                                                    d="M136.038316,5.97674419 C143.279789,48.3246512 114.455228,87.9302326 74.7331228,97.3218605 C47.0243509,103.88186 19.241193,95.0855814 0.350877193,76.4548837"
+                                                                    id="Stroke-1252"></path>
+                                                                <path
+                                                                    d="M72.1495789,32.1595349 C64.8857895,39.4190698 53.1104912,39.4190698 45.8504211,32.1595349 C38.5866316,24.8925581 38.5866316,13.112093 45.8504211,5.83767442 C53.1104912,-1.41813953 64.8857895,-1.41813953 72.1495789,5.83767442 C79.4133684,13.112093 79.4133684,24.8925581 72.1495789,32.1595349 L72.1495789,32.1595349 Z"
+                                                                    id="Stroke-1254"></path>
+                                                            </g>
+                                                        </g>
+                                                    </svg></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="from" ng-model="state.from.address" required=""
+                                    autocomplete="off"
+                                    class="ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required">
+                                <input type="hidden" name="from" ng-model="state.to.address" required=""
+                                    autocomplete="off"
+                                    class="ng-pristine ng-untouched ng-valid ng-not-empty ng-valid-required">
+                                <div ui-form-buttons="stacked no-background increased-padding">
+                                    <div ng-show="errorMessage" ui-paymentform-error="" class="ng-binding ng-hide">
+                                    </div>
+                                    <div ng-show="errorLink" ui-paymentform-error="" class="ng-hide"><a href="">Learn
+                                            more about this error</a></div>
+                                    <button type="submit" ui-btn="primary" ng-disabled="request.$invalid"
+                                        ng-click="submit()" ng-hide="submitted" translate="buttons.review_confirm"
+                                        class="ng-scope" disabled="disabled">Review and confirm</button>
+                                    <button type="button" ui-btn="its-happening" ng-show="submitted"
+                                        translate="buttons.in_progress" class="ng-scope ng-hide">In progress...</button>
+                                    <a ui-link="underlined" ng-click="resetForm()" ng-hide="hideCancel" ui-type="14pt"
+                                        translate="buttons.cancel" class="ng-scope">Cancel</a>
+                                </div>
+                            </form>
+                            {% endif %}
+                            {% if tab_index == 'transfer' %}
+                            <form novalidate="" ui-paymentform="transfer" name="transfer" autocomplete="off"
+                                class="ng-pristine ng-scope ng-invalid ng-invalid-required ng-valid-pattern">
+                                <header ui-payment-alert-header="" ng-show="" class="ng-scope ng-hide">
+                                    <div ui-illustration="medium "></div>
+                                    <div ui-payment-alert-details="ui-Payment-Alert-Details">
+                                        <h3 class="ng-binding"></h3>
+                                        <div ui-flex="ui-flex">
+                                            <p ui-flex-child="shrink-1" class="ng-binding"></p>
+                                            <!-- ngIf: initialState.buttonText -->
+                                        </div>
+                                    </div>
+                                </header>
+                                <div ui-paymentform-field="ui-PaymentForm-Field" ng-class="{'is-open': view.isOpen}"
+                                    form="transfer" field="from" initial="" class="ng-isolate-scope">
+                                    <div ui-accountselector="ui-AccountSelector">
+                                        <header>
+                                            <!-- ngIf: view.formName --><span ui-type="unbroken"
+                                                translate="payments.fields.transfer.from" ng-if="view.formName"
+                                                class="ng-scope">Transfer from:</span><!-- end ngIf: view.formName --><a
+                                                ui-type="14pt right link" ui-link="ui-link" ng-click="switchPayMode()"
+                                                ng-show="switchPayModeEnabled" class="ng-hide">Pay a CoinJar user or
+                                                Bitcoin address</a></header>
+                                        <!-- Normal case. Placeholder, tile & dropdown-->
+                                        <!-- ngIf: view.otherAccounts -->
+                                        <div ui-accountselector-chooser="ui-AccountSelector-Chooser"
+                                            ng-if="view.otherAccounts" class="ng-scope">
+                                            <!-- ngIf: !view.account -->
+                                            <div ui-accounttile="ui-AccountTile" id="uiTitle" onclick="selectCurrency()"
+                                                account="view.placeholder" ng-if="!view.account"
+                                                ng-click="!view.noClick &amp;&amp; view.toggleOpen()"
+                                                class="ng-scope ng-isolate-scope">
+                                                <div ui-accountimage="" background-image="imageUrl" ng-class="classes"
+                                                    ng-bind="fallbackInitials" for="account"
+                                                    class="ng-binding ng-isolate-scope"
+                                                    style="background-image: url(&quot;https://assets.coinjar.com/images/illustrations/illu__account__coinjar--no-account-e6047e7c39.svg&quot;);">
+                                                </div>
+                                                <div ui-accounttile-details="ui-AccountTile-Details">
+                                                    <div ui-accounttile-name="ui-AccountTile-Name" class="ng-binding">
+                                                        Select account...
+                                                    </div>
+                                                    <div ui-accounttile-description="ui-AccountTile-Description"
+                                                        class="ng-binding">
+                                                    </div>
+                                                </div>
+                                                <div ng-switch="account.type">
+                                                    <!-- ngSwitchWhen: hedged_bucket -->
+                                                    <!-- ngSwitchWhen: swipe -->
+                                                    <!-- ngSwitchWhen: swipe_preload -->
+                                                    <!-- ngSwitchWhen: reward_inactive -->
+                                                    <!-- ngSwitchWhen: reward -->
+                                                    <!-- ngSwitchDefault: ng-switch-default -->
+                                                    <div ng-switch-default="ng-switch-default" class="ng-scope">
+                                                        <!-- ngIf: account.balance -->
+                                                    </div><!-- end ngSwitchWhen: -->
+                                                </div>
+                                            </div><!-- end ngIf: !view.account -->
+                                            <!-- ngIf: view.account -->
+                                            <div id="listArrow"
+                                                ui-accounttransactionhistory-dropdown="ui-AccountTransactionHistory-Dropdown"
+                                                ng-hide="view.noDropdown" ng-class="{'is-open': view.isOpen}"
+                                                ui-flex-child="shrink-0" class="">
+                                                <div ui-accounttransactionhistory-downarrow="ui-AccountTransactionHistory-DownArrow"
+                                                    ng-show="view.otherAccounts.length > 0" ng-click="view.toggleOpen()"
+                                                    onclick="selectCurrency()"></div><!-- ngIf: view.isOpen -->
+                                                <nav ng-if="view.isOpen" id="listData" class="ng-scope ng-hide">
+                                                    <!-- ngRepeat: a in view.otherAccounts -->
+                                                    {% for i in user_currency %}
+                                                    <div ui-accounttile="ui-AccountTile"
+                                                        onclick="listSelectCurrency(this)"
+                                                        ng-repeat="account in accounts" account="account"
+                                                        ng-click="routeDefaultAction(account)"
+                                                        ng-class="{&#39;no-ng-click&#39;: !account.properties.statement &amp;&amp; account.type != &#39;exchange&#39;}"
+                                                        class="ng-isolate-scope">
+                                                        <div ui-accountimage="" background-image="imageUrl"
+                                                            ng-class="classes" ng-bind="fallbackInitials" for="account"
+                                                            class="ng-binding ng-isolate-scope"
+                                                            style="background-image: url(&quot;/static/currency/illu__accounts__{{i.simbol|lower}}.svg&quot;);">
+                                                        </div>
+                                                        <div ui-accounttile-details="ui-AccountTile-Details">
+                                                            <div ui-accounttile-name="ui-AccountTile-Name"
+                                                                class="ng-binding">Everyday
+                                                                {{i.name}}</div>
+                                                            <div ui-accounttile-description="ui-AccountTile-Description"
+                                                                class="ng-binding">
+                                                                {{i.slug}}</div>
+                                                        </div>
+                                                        <div ng-switch="account.type">
+                                                            <!-- ngSwitchWhen: hedged_bucket -->
+                                                            <!-- ngSwitchWhen: swipe -->
+                                                            <!-- ngSwitchWhen: swipe_preload -->
+                                                            <!-- ngSwitchWhen: reward_inactive -->
+                                                            <!-- ngSwitchWhen: reward -->
+                                                            <!-- ngSwitchDefault: ng-switch-default -->
+                                                            <div ng-switch-default="ng-switch-default" class="ng-scope">
+                                                                <!-- ngIf: account.balance -->
+                                                                <div ui-accounttile-balance="ui-AccountTile-Balance"
+                                                                    ng-if="account.balance" class="ng-scope"><span
+                                                                        ui-amount="primary"
+                                                                        currency-amount="account.balance" no-rounding=""
+                                                                        class="ng-binding ng-isolate-scope"><span
+                                                                            ui-amount="{{i.simbol}} "
+                                                                            class="ng-binding">{{i.balance|stringformat:".4f"}}</span></span>
+                                                                    <div class="computed-amount ng-binding ng-isolate-scope"
+                                                                        ng-show="amount.currency != to"
+                                                                        ui-amount="secondary USD" ng-class="flashClass"
+                                                                        amount="account.balance">{{i.balance_usd|stringformat:".2f"}}</div>
+                                                                </div><!-- end ngIf: account.balance -->
+                                                            </div><!-- end ngSwitchWhen: -->
+                                                        </div>
+                                                    </div>
+                                                    {% endfor %}
+                                                </nav><!-- end ngIf: view.isOpen -->
+                                            </div>
+                                        </div><!-- end ngIf: view.otherAccounts -->
+                                        <!-- If we don't have any alternatives, don't even have the dropdown-->
+                                        <!-- ngIf: !view.otherAccounts -->
+                                    </div>
+                                </div>
+                                <div ui-paymentform-field="ui-PaymentForm-Field" ng-class="{'is-open': view.isOpen}"
+                                    form="transfer" field="to" exclude="from" initial="" class="ng-isolate-scope">
+                                    <div ui-accountselector="ui-AccountSelector">
+                                        <header>
+                                            <!-- ngIf: view.formName --><span ui-type="unbroken"
+                                                translate="payments.fields.transfer.to" ng-if="view.formName"
+                                                class="ng-scope">Transfer to:</span><!-- end ngIf: view.formName --><a
+                                                ui-type="14pt right link" ui-link="ui-link" ng-click="switchPayMode()"
+                                                ng-show="switchPayModeEnabled" class="ng-hide">Pay a CoinJar user or
+                                                Bitcoin address</a></header>
+                                        <!-- Normal case. Placeholder, tile & dropdown-->
+                                        <!-- ngIf: view.otherAccounts -->
+                                        <div ui-accountselector-chooser="ui-AccountSelector-Chooser"
+                                            ng-if="view.otherAccounts" class="ng-scope">
+                                            <!-- ngIf: !view.account -->
+                                            <div ui-accounttile="ui-AccountTile" id="uiTitle2" onclick="selectCurrency2()"
+                                                account="view.placeholder" ng-if="!view.account"
+                                                ng-click="!view.noClick &amp;&amp; view.toggleOpen()"
+                                                class="ng-scope ng-isolate-scope">
+                                                <div ui-accountimage="" background-image="imageUrl" ng-class="classes"
+                                                    ng-bind="fallbackInitials" for="account"
+                                                    class="ng-binding ng-isolate-scope"
+                                                    style="background-image: url(&quot;https://assets.coinjar.com/images/illustrations/illu__account__coinjar--no-account-e6047e7c39.svg&quot;);">
+                                                </div>
+                                                <div ui-accounttile-details="ui-AccountTile-Details">
+                                                    <div ui-accounttile-name="ui-AccountTile-Name" class="ng-binding">
+                                                        Select account...
+                                                    </div>
+                                                    <div ui-accounttile-description="ui-AccountTile-Description"
+                                                        class="ng-binding">
+                                                    </div>
+                                                </div>
+                                                <div ng-switch="account.type">
+                                                    <!-- ngSwitchWhen: hedged_bucket -->
+                                                    <!-- ngSwitchWhen: swipe -->
+                                                    <!-- ngSwitchWhen: swipe_preload -->
+                                                    <!-- ngSwitchWhen: reward_inactive -->
+                                                    <!-- ngSwitchWhen: reward -->
+                                                    <!-- ngSwitchDefault: ng-switch-default -->
+                                                    <div ng-switch-default="ng-switch-default" class="ng-scope">
+                                                        <!-- ngIf: account.balance -->
+                                                    </div><!-- end ngSwitchWhen: -->
+                                                </div>
+                                            </div><!-- end ngIf: !view.account -->
+                                            <!-- ngIf: view.account -->
+                                            <div id="listArrow2"
+                                                ui-accounttransactionhistory-dropdown="ui-AccountTransactionHistory-Dropdown"
+                                                ng-hide="view.noDropdown" ng-class="{'is-open': view.isOpen}"
+                                                ui-flex-child="shrink-0" class="">
+                                                <div ui-accounttransactionhistory-downarrow="ui-AccountTransactionHistory-DownArrow"
+                                                    ng-show="view.otherAccounts.length > 0" ng-click="view.toggleOpen()"
+                                                    onclick="selectCurrency2()"></div><!-- ngIf: view.isOpen -->
+                                                <nav ng-if="view.isOpen" id="listData2" class="ng-scope ng-hide">
+                                                    <!-- ngRepeat: a in view.otherAccounts -->
+                                                    {% for i in user_currency %}
+                                                    <div ui-accounttile="ui-AccountTile"
+                                                        onclick="listSelectCurrency2(this)"
+                                                        ng-repeat="account in accounts" account="account"
+                                                        ng-click="routeDefaultAction(account)"
+                                                        ng-class="{&#39;no-ng-click&#39;: !account.properties.statement &amp;&amp; account.type != &#39;exchange&#39;}"
+                                                        class="ng-isolate-scope">
+                                                        <div ui-accountimage="" background-image="imageUrl"
+                                                            ng-class="classes" ng-bind="fallbackInitials" for="account"
+                                                            class="ng-binding ng-isolate-scope"
+                                                            style="background-image: url(&quot;/static/currency/illu__accounts__{{i.simbol|lower}}.svg&quot;);">
+                                                        </div>
+                                                        <div ui-accounttile-details="ui-AccountTile-Details">
+                                                            <div ui-accounttile-name="ui-AccountTile-Name"
+                                                                class="ng-binding">Everyday
+                                                                {{i.name}}</div>
+                                                            <div ui-accounttile-description="ui-AccountTile-Description"
+                                                                class="ng-binding">
+                                                                {{i.slug}}</div>
+                                                        </div>
+                                                        <div ng-switch="account.type">
+                                                            <!-- ngSwitchWhen: hedged_bucket -->
+                                                            <!-- ngSwitchWhen: swipe -->
+                                                            <!-- ngSwitchWhen: swipe_preload -->
+                                                            <!-- ngSwitchWhen: reward_inactive -->
+                                                            <!-- ngSwitchWhen: reward -->
+                                                            <!-- ngSwitchDefault: ng-switch-default -->
+                                                            <div ng-switch-default="ng-switch-default" class="ng-scope">
+                                                                <!-- ngIf: account.balance -->
+                                                                <div ui-accounttile-balance="ui-AccountTile-Balance"
+                                                                    ng-if="account.balance" class="ng-scope"><span
+                                                                        ui-amount="primary"
+                                                                        currency-amount="account.balance" no-rounding=""
+                                                                        class="ng-binding ng-isolate-scope"><span
+                                                                            ui-amount="{{i.simbol}} "
+                                                                            class="ng-binding">{{i.balance|stringformat:".4f"}}</span></span>
+                                                                    <div class="computed-amount ng-binding ng-isolate-scope"
+                                                                        ng-show="amount.currency != to"
+                                                                        ui-amount="secondary USD" ng-class="flashClass"
+                                                                        amount="account.balance">{{i.balance_usd|stringformat:".2f"}}</div>
+                                                                </div><!-- end ngIf: account.balance -->
+                                                            </div><!-- end ngSwitchWhen: -->
+                                                        </div>
+                                                    </div>
+                                                    {% endfor %}
+                                                </nav><!-- end ngIf: view.isOpen -->
+                                            </div>
+                                        </div><!-- end ngIf: view.otherAccounts -->
+                                        <!-- If we don't have any alternatives, don't even have the dropdown-->
+                                        <!-- ngIf: !view.otherAccounts -->
+                                    </div>
+                                </div>
+                                <div form="transfer" field="amount" behaviour="transfer" initial=""
+                                    class="ng-isolate-scope">
+                                    <div ui-paymentform-field="ui-PaymentForm-Field">
+                                        <header><span translate="payments.fields.amount" class="ng-scope">Amount:</span>
+                                        </header>
+                                        <div ui-paymentamount="ui-PaymentAmount">
+                                            <div ui-paymentamount-amount="ui-PaymentAmount-Amount">
+                                                <div ui-paymentamount-input="ui-PaymentAmount-Input"><input
+                                                        ng-model="value" name="amount" type="text" inputmode="numeric"
+                                                        placeholder="0" ng-pattern="/^[0-9\.,]+$/" required="required"
+                                                        autocomplete="off"
+                                                        class="ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required ng-valid-pattern">
+                                                    <div ui-paymentamount-currency="ui-PaymentAmount-Currency"
+                                                        class="ng-binding">BTC</div>
+                                                </div>
+                                                <div ui-paymentamount-feeinformation="ui-PaymentAmount-FeeInformation"
+                                                    ng-show="feeQuote" class="ng-hide"><span ui-amount=""
+                                                        currency-amount="form.state.equivalence"
+                                                        ng-show="currencies.length > 1"
+                                                        class="ng-binding ng-isolate-scope ng-hide"><span ui-amount=" "
+                                                            class="ng-binding"> - </span></span>
+                                                    <div ui-type="14pt" ng-show="feeQuote.feePercentage"
+                                                        translate="payments.fields.excluding_fee"
+                                                        translate-values="{percentage: feeQuote.feePercentage}"
+                                                        class="ng-scope ng-hide">(excluding % fee)</div>
+                                                </div>
+                                            </div>
+                                            <div ui-paymentamount-currencytoggle="ui-PaymentAmount-CurrencyToggle"
+                                                ng-show="currencies.length > 1" ng-click="toggleCurrency()"
+                                                ui-flex-child="shrink-0" class="ng-hide">
+                                                <div svg-icon="icon__currency--switcher" ui-svg="no-circle large"
+                                                    class="ng-isolate-scope"><svg viewBox="0 0 320 320"
+                                                        xmlns="http://www.w3.org/2000/svg" class="svg-icon">
+                                                        <g id="icon__currency--switcher" stroke-linecap="round"
+                                                            stroke="currentColor" class="stroke-width-6"
+                                                            stroke-linejoin="round">
+                                                            <g id="Stroke-1251-+-Stroke-1252"
+                                                                transform="translate(137.000000, 130.500000) rotate(-180.000000) translate(-137.000000, -130.500000) translate(55.000000, 83.000000)">
+                                                                <polyline id="Stroke-1251"
+                                                                    transform="translate(135.309825, 20.452093) rotate(-2.000000) translate(-135.309825, -20.452093) "
+                                                                    points="163.409123 39.9274419 137.281053 0.976744186 107.210526 36.987907">
+                                                                </polyline>
+                                                                <path
+                                                                    d="M136.038316,1.97674419 C143.279789,44.3246512 114.455228,83.9302326 74.7331228,93.3218605 C47.0243509,99.8818605 19.241193,91.0855814 0.350877193,72.4548837"
+                                                                    id="Stroke-1252"></path>
+                                                            </g>
+                                                            <g id="Stroke-1251-+-Stroke-1252"
+                                                                transform="translate(101.000000, 143.000000)">
+                                                                <polyline id="Stroke-1251"
+                                                                    transform="translate(135.309825, 24.452093) rotate(-2.000000) translate(-135.309825, -24.452093) "
+                                                                    points="163.409123 43.9274419 137.281053 4.97674419 107.210526 40.987907">
+                                                                </polyline>
+                                                                <path
+                                                                    d="M136.038316,5.97674419 C143.279789,48.3246512 114.455228,87.9302326 74.7331228,97.3218605 C47.0243509,103.88186 19.241193,95.0855814 0.350877193,76.4548837"
+                                                                    id="Stroke-1252"></path>
+                                                                <path
+                                                                    d="M72.1495789,32.1595349 C64.8857895,39.4190698 53.1104912,39.4190698 45.8504211,32.1595349 C38.5866316,24.8925581 38.5866316,13.112093 45.8504211,5.83767442 C53.1104912,-1.41813953 64.8857895,-1.41813953 72.1495789,5.83767442 C79.4133684,13.112093 79.4133684,24.8925581 72.1495789,32.1595349 L72.1495789,32.1595349 Z"
+                                                                    id="Stroke-1254"></path>
+                                                            </g>
+                                                        </g>
+                                                    </svg></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="from" ng-model="state.from.address" required=""
+                                    autocomplete="off"
+                                    class="ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required">
+                                <input type="hidden" name="from" ng-model="state.to.address" required=""
+                                    autocomplete="off"
+                                    class="ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required">
+                                <div ui-form-buttons="stacked no-background increased-padding">
+                                    <div ng-show="errorMessage" ui-paymentform-error="" class="ng-binding ng-hide">
+                                    </div>
+                                    <div ng-show="errorLink" ui-paymentform-error="" class="ng-hide"><a href="">Learn
+                                            more about this error</a></div>
+                                    <button type="submit" ui-btn="primary" ng-disabled="transfer.$invalid"
+                                        ng-click="submit()" ng-hide="submitted" translate="buttons.review_confirm"
+                                        class="ng-scope" disabled="disabled">Review and confirm</button>
+                                    <button type="button" ui-btn="its-happening" ng-show="submitted"
+                                        translate="buttons.in_progress" class="ng-scope ng-hide">In progress...</button>
+                                    <a ui-link="underlined" ng-click="resetForm()" ng-hide="hideCancel" ui-type="14pt"
+                                        translate="buttons.cancel" class="ng-scope">Cancel</a>
+                                </div>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div><!-- end ngIf: currentTab == tab -->
+            </div>
+            <div ui-modal="" id="successTransaction" ng-show="visible" class="ng-isolate-scope ng-hide">
+                <div ui-modal-inner="" class="">
+                    <!-- ngInclude: 'components/payment_modals/transaction_detail.html' -->
+                    <div ng-include="'components/payment_modals/transaction_detail.html'" class="ng-scope">
+                        <article ui-paymentmodal="ui-PaymentModal" class="ng-scope">
+                            <div ng-show="transaction.success" ui-paymentmodal-success="ui-PaymentModal-Success"
+                                svg-icon="icon__verification-tick" ui-svg="white on-green huge thick-circle"
+                                class="ng-isolate-scope"><svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg"
+                                    class="svg-icon">
+                                    <g id="icon__verification-tick" fill="currentColor">
+                                        <path
+                                            d="M253.631801,119.763993 L150.56076,223.654285 C147.59187,226.648123 141.727498,229.096509 137.52293,229.096509 L128.620339,229.096509 C124.41985,229.096509 118.555477,226.644022 115.590665,223.654285 L67.0525813,174.616853 C64.0877697,171.618914 64.0918479,166.726244 67.0648157,163.740608 L86.1668477,144.530828 C89.1357374,141.53699 94.0009646,141.53699 96.9739325,144.522626 L127.984148,175.64214 C130.961194,178.631877 135.822343,178.623675 138.791233,175.633938 L223.787935,89.9609476 C226.752746,86.9712104 231.622052,86.9548058 234.603176,89.9363407 L253.603254,108.908253 C256.584378,111.889788 256.596613,116.770155 253.631801,119.763993 L253.631801,119.763993 Z"
+                                            id="Imported-Layers"></path>
+                                    </g>
+                                </svg></div>
+                            <h2 translate="statement.transaction_detail.transaction_complete" class="ng-scope">Transaction Complete
+                            </h2>
+                            <section ui-paymentmodal-summary="ui-PaymentModal-Summary">
+                                <div ui-paymentmodal-account="ui-PaymentModal-Account" ng-hide="transaction.overrideMessage"><span
+                                        translate="statement.transaction_detail.sent_from" class="ng-scope">Sent from</span>
+                                    <h3 class="ng-binding" id="scurrency">Everyday Bitcoin</h3>
+                                    <div ui-accountimage="medium" id="sicon" background-image="imageUrl" ng-class="classes"
+                                        ng-bind="fallbackInitials" for="transaction.source" class="ng-binding ng-isolate-scope"
+                                        style="background-image: url(&quot;https://assets.coinjar.com/images/illustrations/illu__accounts__bitcoin-4f236540d4.svg&quot;);">
+                                    </div>
+                                </div>
+                                <div ui-paymentmodal-arrow="ui-PaymentModal-Arrow" ng-hide="transaction.overrideMessage">
+                                    <div svg-icon="icon__payments-arrow" ui-svg="no-circle large grey" class="ng-isolate-scope"><svg
+                                            viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" class="svg-icon">
+                                            <g id="icon__payments-arrow" stroke-linecap="round" stroke="currentColor"
+                                                class="stroke-width-6">
+                                                <g id="Arrow-Up-2"
+                                                    transform="translate(160.000000, 159.589655) rotate(-270.000000) translate(-160.000000, -159.589655) translate(99.500000, 67.589655)">
+                                                    <path d="M60.8138155,1.33049252 L60.8138155,183.44774" id="Arrow-Stem"></path>
+                                                    <polyline id="Arrow-Head" stroke-linejoin="round"
+                                                        points="0.10231783 60.9763352 60.7515572 0.0127175533 121.634794 60.9763352">
+                                                    </polyline>
+                                                </g>
+                                            </g>
+                                        </svg></div><span ui-amount="primary" currency-amount="transaction.topAmount"
+                                        no-rounding="no-rounding" no-sign="no-sign" class="ng-binding ng-isolate-scope"><span
+                                            ui-amount=" " class="ng-binding" id="svalue2">0.00001</span></span>
+                                    <!-- ngIf: transaction.state != 'confirmed' -->
+                                    <div ui-type="14pt upcase lh1.8 warning" ng-if="transaction.state != 'confirmed'"
+                                        class="ng-binding ng-scope"></div><!-- end ngIf: transaction.state != 'confirmed' -->
+                                </div>
+                                <div ui-paymentmodal-account="ui-PaymentModal-Account"><span
+                                        translate="statement.transaction_detail.sent_to" class="ng-scope">Sent to</span>
+                                    <h3 class="ng-binding" id="scontact">@Alex</h3>
+                                    <div ui-accountimage="" background-image="imageUrl" ng-class="classes" ng-bind="fallbackInitials"
+                                        for="view.chosenContact" ui-flex-child="shrink-0" class="ng-binding ng-isolate-scope"
+                                        style="background-image: url(&quot;https://assets.coinjar.com/images/illustrations/illu__account__user--no-photo-34dc2a1c88.svg&quot;);height: 3.8rem;width: 3.8rem;">
+                                    </div>
+                                </div>
+                            </section><!-- ngIf: transaction.date -->
+                            <section ui-paymentmodel-metadata="ui-PaymentModel-Metadata">
+                                <!-- ngIf: transaction.total -->
+                                <div ui-paymentmodal-fee="ui-PaymentModal-Fee" ng-if="transaction.total" class="ng-scope">
+                                    <p ng-show="transaction.total"><span translate="statement.transaction_detail.they_receive"
+                                            class="ng-scope">They'll receive</span> <span ui-amount="primary"
+                                            currency-amount="transaction.total" no-sign="no-sign" no-rounding="no-rounding"
+                                            class="ng-binding ng-isolate-scope"><span ui-amount=" "
+                                                class="ng-binding" id="svalue">0.00001</span></span></p>
+                                    <p ng-hide="transaction.fixedFee" class="ng-binding ng-hide">(<span ui-amount="primary"
+                                            currency-amount="transaction.totalExcludingFee" no-sign="no-sign"
+                                            no-rounding="no-rounding" class="ng-binding ng-isolate-scope"><span ui-amount=" "
+                                                class="ng-binding">0.00001</span></span> - 0% <span
+                                            translate="statement.transaction_detail.fee" class="ng-scope">fee</span>)</p>
+                                    <p ng-show="transaction.fixedFee">(<span ui-amount="primary"
+                                            currency-amount="transaction.totalFee" no-sign="no-sign" no-rounding="no-rounding"
+                                            class="ng-binding ng-isolate-scope"><span ui-amount=""
+                                                class="ng-binding">0.0000</span></span> <span
+                                            translate="statement.transaction_detail.network_fee" class="ng-scope">network
+                                            fee</span>)</p>
+                                    <p ng-show="transaction.exchange" class="ng-hide"><span ui-amount="primary "
+                                            class="ng-binding">1</span> = <span ui-amount="primary " class="ng-binding"></span></p>
+                                    <!-- ngIf: transaction.expiry -->
+                                </div><!-- end ngIf: transaction.total -->
+                                <div ui-paymentmodal-detaillist="ui-PaymentModal-DetailList" ui-flex="wrap">
+                                    <!-- ngRepeat: detail in transaction.detailList -->
+                                </div>
+                            </section>
+                            <!-- ngIf: transaction.enableRewards && (transaction.pointsEarningQuote.fractional > 0 || transaction.pointsRedemptionQuote.fractional > 0) && !transaction.success -->
+                            <!-- ngIf: !transaction.editNote -->
+                            <section ng-if="!transaction.editNote" class="ng-scope">
+                                <div ui-paymentmodal-note="ui-PaymentModal-Note" ng-show="transaction.note" class="ng-hide">
+                                    <h6>Note</h6>
+                                    <p class="ng-binding"></p>
+                                </div><!-- ngIf: !transaction.success || transaction.single -->
+                                <!-- ngIf: transaction.success && !transaction.single -->
+                                <div ui-form-buttons="pair" ng-if="transaction.success &amp;&amp; !transaction.single"
+                                    class="ng-scope"><button type="button" ui-btn="cancel" ng-click="resolve()"
+                                        translate="buttons.new_payment" onclick="window.location.href='/payments/'" class="ng-scope">New Payment</button><a ui-btn="secondary"
+                                        ui-sref="accounts.dashboard" ng-click="resolve()" translate="buttons.done" class="ng-scope"
+                                        href="/">Done</a></div>
+                                <!-- end ngIf: transaction.success && !transaction.single -->
+                            </section><!-- end ngIf: !transaction.editNote -->
+                            <!-- ngIf: transaction.editNote -->
+                        </article>
+                    </div>
+                </div><!-- ngIf: visible -->
+                <div ui-modal-background="" ng-if="visible" ng-click="closeModal()" class="ng-scope"></div>
+                <!-- end ngIf: visible -->
+            </div>
+        </div>
+    </section>
+</div>
+<script>
+    function selectCurrency() {
+        var listArrow = $("#listArrow")
+        if (listArrow[0].className.includes("is-open")) {
+            listArrow[0].className = ""
+            $("#listData")[0].className = "ng-scope ng-hide"
+        } else {
+            listArrow[0].className = "is-open"
+            $("#listData")[0].className = "ng-scope"
+        }
+    }
+    function selectCurrency2() {
+        var listArrow = $("#listArrow2")
+        if (listArrow[0].className.includes("is-open")) {
+            listArrow[0].className = ""
+            $("#listData2")[0].className = "ng-scope ng-hide"
+        } else {
+            listArrow[0].className = "is-open"
+            $("#listData2")[0].className = "ng-scope"
+        }
+    }
+    var walletbalance = 0
+    var currency = ""
+    function listSelectCurrency(el) {
+        console.log(el)
+        $("#uiTitle")[0].innerHTML = el.innerHTML
+        selectCurrency()
+        currency = el.children[2].children[0].children[0].children[0].children[0].attributes[0].value
+        $("#currentCurency")[0].innerHTML = el.children[2].children[0].children[0].children[0].children[0].attributes[0]
+            .value
+        walletbalance = parseFloat(el.children[2].children[0].children[0].children[0].children[0].innerText)
+        transacrionCheck()
+    }
+    function listSelectCurrency2(el) {
+        console.log(el)
+        $("#uiTitle2")[0].innerHTML = el.innerHTML
+        selectCurrency2()
+        $("#currentCurency2")[0].innerHTML = el.children[2].children[0].children[0].children[0].children[0].attributes[0].value
+        
+    }
+
+    function selectContact(type) {
+        if (type) {
+            $("#accountDropdown")[0].className = ""
+        } else {
+            myVar = setTimeout(alertFunc, 200);
+
+        }
+    }
+    var selectedContact = ""
+    function curSelectContact(el) {
+        selectedContact = el.children[1].children[1].innerText
+        $("#contactInput")[0].value = el.children[1].children[1].innerText
+        transacrionCheck()
+        //selectContact(false)
+    }
+
+    function alertFunc() {
+        $("#accountDropdown")[0].className = "ng-hide"
+    }
+    function successTransaction() {
+        $.ajax({
+            url: `/transaction/?currency=${currency.replace(" ","")}&amount=${value}&contact=${selectedContact}`,
+            type: 'GET',
+            dataType: 'text', // added data type
+            success: function(res) {
+                $("#successTransaction")[0].className = "ng-isolate-scope "
+            }
+        });
+        
+
+    }
+    var value = 0
+    function amountInput(v) {
+        //&& selectedContact != ""
+        value = v
+        transacrionCheck()
+    }
+    function transacrionCheck() {
+        if(value<=walletbalance && value > 0 ){
+            $("#confirmBtn")[0].disabled = false;
+            $("#sicon")[0].style = `background-image: url('/static/currency/illu__accounts__${currency.toString().replace(" ","").toLowerCase()}.svg');">`
+            $("#scurrency")[0].innerHTML = currency
+            $("#svalue")[0].innerHTML = value
+            $("#svalue2")[0].innerHTML = value
+            $("#scontact")[0].innerHTML = selectedContact
+        }
+        else{
+            $("#confirmBtn")[0].disabled = true;
+        }
+    }
+</script>
+{% endblock %}

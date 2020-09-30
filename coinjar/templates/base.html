@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<!-- saved from url=(0024)https://app.coinjar.com/ -->
+<html lang="en" class="breakpoint-wall">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <style>
+        #addaccount{
+            display: none;
+        }
+    </style>
+
+    <title>My CoinJar</title>
+    <meta name="description"
+        content="CoinJar lets you buy, sell and manage bitcoin, for the everyday and the extraordinary. Open a CoinJar today to use our beautiful, simple digital finance tools.">
+    <meta name="robots" content="index, follow, noodp">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="breakpoint" content="below-iphone-6" media="(max-width: 23em)">
+    <meta name="breakpoint" content="hand" media="(max-width: 47em)">
+    <meta name="breakpoint" content="lap" media="(min-width: 47.0001em) and (max-width: 59.937em)">
+    <meta name="breakpoint" content="desk" media="(min-width: 60em) and (max-width: 74.937em)">
+    <meta name="breakpoint" content="wall" media="(min-width: 75em)">
+    <meta name="breakpoint" content="retina" media="(-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dppx)">
+    <!-- iOS specific stuff-->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="CoinJar">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <script async="" src="/analytics.js"></script>
+    <script>
+        ! function (a, b) {
+            "use strict";
+            var c = {
+                    breakpoints: {},
+                    _isTicking: !1,
+                    _debounceLastTime: 0,
+                    _namedEvents: {},
+                    _eventMatchCache: {},
+                    _globalEvents: [],
+                    onBreakpointChange: function () {
+                        var a = Array.prototype.slice.call(arguments),
+                            b = a.pop(),
+                            d = a.pop();
+                        "undefined" == typeof d ? c._globalEvents.push(b) : (c._namedEvents[d] = []).push(b), k()
+                    }
+                },
+                d = function (c) {
+                    /in/.test(b.readyState) ? a.setTimeout(function () {
+                        d(c)
+                    }, 9) : c()
+                },
+                e = function (a, b) {
+                    var c = a.className.split(" "),
+                        d = c.indexOf(b);
+                    d > -1 && (c.splice(d, 1), a.className = c.join(" "))
+                },
+                f = function (a, b) {
+                    -1 === a.className.indexOf(b) && (a.className = "" !== a.className ? a.className + " " + b : b)
+                },
+                g = function (a, c) {
+                    var d = "breakpoint-" + c,
+                        g = b.documentElement;
+                    a ? f(g, d) : e(g, d)
+                },
+                h = function (a) {
+                    c._globalEvents.forEach(function (b) {
+                        "function" == typeof b && b(a)
+                    })
+                },
+                i = function () {
+                    c._isTicking || j(k), c._isTicking = !0
+                },
+                j = function (b, d) {
+                    if (!a.requestAnimationFrame) {
+                        var e = (new Date).getTime(),
+                            f = Math.max(0, 16 - (e - c._debounceLastTime)),
+                            g = a.setTimeout(function () {
+                                b(e + f)
+                            }, f);
+                        return c._debounceLastTime = e + f, g
+                    }
+                    a.requestAnimationFrame(b, d)
+                },
+                k = function () {
+                    c._isTicking = !1;
+                    var b = [];
+                    for (var d in c.breakpoints) {
+                        var e = c.breakpoints[d],
+                            f = a.matchMedia(e).matches;
+                        if (c._namedEvents[d] && c._eventMatchCache[d] !== f) {
+                            c._eventMatchCache[d] = f;
+                            for (var i = 0; i < c._namedEvents[d].length; i++) {
+                                var j = c._namedEvents[d][i];
+                                "function" == typeof j && j(f)
+                            }
+                        }
+                        f && b.push(d), g(f, d)
+                    }
+                    0 !== b.length && h(b)
+                },
+                l = function () {
+                    for (var a = b.getElementsByTagName("meta"), d = 0; d < a.length; d++)
+                        if ("breakpoint" === a[d].name) {
+                            var e = a[d].getAttribute("content"),
+                                f = a[d].getAttribute("media");
+                            c.breakpoints[e] = f
+                        }
+                },
+                m = function () {
+                    l(), k()
+                },
+                n = function () {
+                    l(), k(), a.addEventListener("resize", i)
+                };
+            "undefined" != typeof module && module.exports ? module.exports = c : a.metaQuery = c, m(), d(n)
+        }(window, document);
+    </script>
+    <meta name="application-name" content="CoinJar">
+    <meta name="msapplication-TileColor" content="#FFFFFF">
+    <link rel="stylesheet" href="https://assets.coinjar.com/css/mobius-00758db4b1.css">
+    <link rel="apple-touch-icon-precomposed" sizes="57x57"
+        href="https://assets.coinjar.com/images/icons/apple-touch-icon-57x57-4ef2bf49ce.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114"
+        href="https://assets.coinjar.com/images/icons/apple-touch-icon-114x114-9c0def4e61.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72"
+        href="https://assets.coinjar.com/images/icons/apple-touch-icon-72x72-a18a321d54.png">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144"
+        href="https://assets.coinjar.com/images/icons/apple-touch-icon-144x144-f85c9881ea.png">
+    <link rel="apple-touch-icon-precomposed" sizes="60x60"
+        href="https://assets.coinjar.com/images/icons/apple-touch-icon-60x60-47878944eb.png">
+    <link rel="apple-touch-icon-precomposed" sizes="120x120"
+        href="https://assets.coinjar.com/images/icons/apple-touch-icon-120x120-677d635e7d.png">
+    <link rel="apple-touch-icon-precomposed" sizes="76x76"
+        href="https://assets.coinjar.com/images/icons/apple-touch-icon-76x76-baf731061e.png">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152"
+        href="https://assets.coinjar.com/images/icons/apple-touch-icon-152x152-d0472ab760.png">
+    <link rel="icon" type="image/png" href="https://assets.coinjar.com/images/icons/favicon-196x196-920d1b0fd3.png"
+        sizes="196x196">
+    <link rel="icon" type="image/png" href="https://assets.coinjar.com/images/icons/favicon-96x96-255bd3b833.png"
+        sizes="96x96">
+    <link rel="icon" type="image/png" href="https://assets.coinjar.com/images/icons/favicon-32x32-b43f4538af.png"
+        sizes="32x32">
+    <link rel="icon" type="image/png" href="https://assets.coinjar.com/images/icons/favicon-16x16-1e2675e5f0.png"
+        sizes="16x16">
+    <link rel="icon" type="image/png" href="https://assets.coinjar.com/images/icons/favicon-128-d634f3b2c5.png"
+        sizes="128x128">
+    <meta name="msapplication-TileImage"
+        content="https://assets.coinjar.com/images/icons/mstile-144x144-f85c9881ea.png">
+    <meta name="msapplication-square70x70logo"
+        content="https://assets.coinjar.com/images/icons/mstile-70x70-d634f3b2c5.png">
+    <meta name="msapplication-square150x150logo"
+        content="https://assets.coinjar.com/images/icons/mstile-150x150-1a047dddd1.png">
+    <meta name="msapplication-wide310x150logo"
+        content="https://assets.coinjar.com/images/icons/mstile-310x150-80a5ef0c58.png">
+    <meta name="msapplication-square310x310logo"
+        content="https://assets.coinjar.com/images/icons/mstile-310x310-de3cde116a.png">
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-41835591-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+</head>
+
+<body ng-app="mobius-app" ng-controller="BodyCtrl" ng-class="bodyClasses()" class="ng-scope">
+    <div ui-frame="app">
+        <aside ui-aside="" ng-hide="hideSidebar">
+            <div ui-drawer="app" ng-controller="NavCtrl" class="ng-scope">
+                <div ui-drawer-profile="" style="padding: 2rem 0;">
+                    <div ui-accountimage="large" background-image="imageUrl" ng-class="classes"
+                        ng-bind="fallbackInitials" for="CurrentUser" no-initials="" ng-click="CurrentUser.showProfile()"
+                        class="ng-binding ng-isolate-scope is-svg"
+                        style="background-image: url(&quot;https://assets.coinjar.com/images/illustrations/illu__profile__no-profile-2acce52ba9.svg&quot;);">
+                    </div>
+                    <div ui-drawer-profile-name="username" resize-to-fit="finished" ng-show="CurrentUser.username"
+                        class="ng-isolate-scope" style="font-size: 26px;">
+                        <div style="display: inline-block; white-space: nowrap;" ng-transclude=""><span ui-type="at"
+                                class="ng-scope"></span><span class="ng-binding ng-scope">{{user.userlogin}}</span></div>
+                    </div>
+                    <div ui-drawer-profile-name="fullname" ng-hide="CurrentUser.username" class="ng-binding ng-hide">{{user.first_name}}
+                        {{user.last_name}}</div>
+                </div>
+                <div ui-drawer-menu="">
+                    <ul ui-drawer-links="">
+                        <li ui-sref="accounts.dashboard" ng-class="{&#39;is-active&#39;: onAccounts()}"
+                            class="ng-binding {{index}}" onclick="Navigate(this)" href="/"><span svg-icon="icon__coinjar-logo" ui-svg="large"
+                                class="ng-isolate-scope"><svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg"
+                                    class="svg-icon">
+                                    <g id="icon__coinjar-logo">
+                                        <g id="CoinJar-Logo" transform="translate(32.000000, 59.000000)">
+                                            <path
+                                                d="M28.0599902,101.5 C28.0599902,45.4013785 73.2972718,-0.0755395683 129.100287,-0.0755395683 C184.903301,-0.0755395683 230.140583,45.4013785 230.140583,101.5 C230.140583,157.598621 184.903301,203.07554 129.100287,203.07554 C73.2972718,203.07554 28.0599902,157.598621 28.0599902,101.5 Z"
+                                                id="Oval-5" stroke="currentColor" class="stroke-width-8"></path>
+                                            <polygon id="Line" fill="currentColor"
+                                                points="216.756447 151.643885 221.157593 151.643885 221.157593 142.794964 216.756447 142.794964 41.4425915 142.794964 37.0414453 142.794964 37.0414453 151.643885 41.4425915 151.643885">
+                                            </polygon>
+                                            <path
+                                                d="M-0.0726775846,151.590566 L13.2711407,124.359712 L32.1349877,124.359712 C33.7926156,133.9185 36.6804974,143.052431 40.6285971,151.590566 L-0.0726775846,151.590566 Z"
+                                                id="Rectangle-5" fill="currentColor"></path>
+                                            <path
+                                                d="M215.583483,151.590566 L228.927301,124.359712 L247.791148,124.359712 C249.448776,133.9185 252.336658,143.052431 256.284758,151.590566 L215.583483,151.590566 Z"
+                                                id="Rectangle-6" fill="currentColor"
+                                                transform="translate(235.828080, 138.001799) scale(-1, 1) translate(-235.828080, -138.001799) ">
+                                            </path>
+                                        </g>
+                                    </g>
+                                </svg></span>Accounts</li>
+                        <li ui-sref="payments" ui-sref-active="is-active" class="ng-binding {{payments}}" onclick="Navigate(this)" href="/payments/"><span
+                                svg-icon="icon__payments" ui-svg="large"  class="ng-isolate-scope"><svg
+                                    viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" class="svg-icon">
+                                    <g id="icon__payments" stroke-linecap="round" stroke="currentColor"
+                                        class="stroke-width-6">
+                                        <g id="Payments"
+                                            transform="translate(161.500000, 160.000000) rotate(-90.000000) translate(-161.500000, -160.000000) translate(58.000000, 87.000000)">
+                                            <g id="Arrow-Up" transform="translate(111.000000, 0.000000)">
+                                                <path d="M48.0545136,1.05134286 L48.0545136,144.958704" id="Arrow-Stem">
+                                                </path>
+                                                <polyline id="Arrow-Head" stroke-linejoin="round"
+                                                    points="0.0808506012 48.1829352 48.0053177 0.0100492928 96.114687 48.1829352">
+                                                </polyline>
+                                            </g>
+                                            <g id="Arrow-Down"
+                                                transform="translate(48.000000, 73.500000) scale(1, -1) translate(-48.000000, -73.500000) translate(0.000000, 1.000000)">
+                                                <path d="M48.3270818,1.05134286 L48.3270814,144.958704" id="Arrow-Stem">
+                                                </path>
+                                                <polyline id="Arrow-Head" stroke-linejoin="round"
+                                                    points="0.0808506012 48.1829352 48.0053177 0.0100492928 96.114687 48.1829352">
+                                                </polyline>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </svg></span>Payments</li>
+                        <li ui-sref="trade" ui-sref-active="is-active" class="ng-binding {{trade}}" onclick="Navigate(this)" href="/trade/"><span
+                                svg-icon="icon__chart" ui-svg="large"  class="ng-isolate-scope"><svg
+                                    viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" class="svg-icon">
+                                    <g id="icon__chart">
+                                        <g id="Group" transform="translate(61.000000, 73.000000)">
+                                            <rect id="Rectangle-Copy" fill="currentColor" x="0" y="157" width="22"
+                                                height="5"></rect>
+                                            <rect id="Rectangle-Copy-12" fill="currentColor" x="54" y="157" width="144"
+                                                height="5"></rect>
+                                            <rect id="Rectangle-Copy-2" fill="currentColor" x="0" y="124" width="32"
+                                                height="5"></rect>
+                                            <rect id="Rectangle-Copy-10" fill="currentColor" x="61" y="124" width="24"
+                                                height="5"></rect>
+                                            <rect id="Rectangle-Copy-11" fill="currentColor" x="120" y="124" width="78"
+                                                height="5"></rect>
+                                            <rect id="Rectangle-Copy-3" fill="currentColor" x="135" y="91" width="63"
+                                                height="5"></rect>
+                                            <rect id="Rectangle-Copy-8" fill="currentColor" x="91" y="91" width="11"
+                                                height="5"></rect>
+                                            <rect id="Rectangle-Copy-9" fill="currentColor" x="0" y="91" width="42"
+                                                height="5"></rect>
+                                            <rect id="Rectangle-Copy-4" fill="currentColor" x="151" y="58" width="47"
+                                                height="5"></rect>
+                                            <rect id="Rectangle-Copy-7" fill="currentColor" x="0" y="58" width="118"
+                                                height="5"></rect>
+                                            <rect id="Rectangle-Copy-5" fill="currentColor" x="176" y="25" width="22"
+                                                height="5"></rect>
+                                            <rect id="Rectangle-Copy-6" fill="currentColor" x="0" y="25" width="118"
+                                                height="5"></rect>
+                                            <polyline id="Line" stroke="currentColor" class="stroke-width-9"
+                                                stroke-linecap="square"
+                                                points="33 173.957031 62 77.9570312 102 122.957031 155.758145 18.3556771">
+                                            </polyline>
+                                            <polygon id="Rectangle-2" fill="currentColor"
+                                                transform="translate(149.176762, 30.729676) rotate(-17.000000) translate(-149.176762, -30.729676) "
+                                                points="156.413387 54.9477033 151.170945 49.7052612 140.686061 39.2203771 130.201177 28.735493 124.958735 23.4930509 173.39479 6.51164814">
+                                            </polygon>
+                                        </g>
+                                    </g>
+                                </svg></span>Buy / Sell</li>
+                        <li ui-sref="contacts" ui-sref-active="is-active" class="ng-binding {{contacts}}" onclick="Navigate(this)" href="/contacts/"><span
+                                svg-icon="icon__user" ui-svg="large"  class="ng-isolate-scope"><svg viewBox="0 0 320 320"
+                                    xmlns="http://www.w3.org/2000/svg" class="svg-icon">
+                                    <g id="icon__user" stroke="currentColor" class="stroke-width-6"
+                                        stroke-linejoin="round">
+                                        <g id="Stroke-808-+-Stroke-809-+-Stroke-810"
+                                            transform="translate(86.000000, 63.000000)">
+                                            <path
+                                                d="M151.26636,194.832275 C137.761896,188.415182 124.816788,181.718795 111.045963,176.219379 L111.045963,142.970188 C111.045963,142.970188 126.101976,137.111681 126.101976,101.049609 C137.775214,101.049609 142.88933,67.5144759 126.641355,67.5144759 C126.641355,63.9701122 139.499896,45.58331 134.498983,25.5872469 C126.101976,-7.95453629 42.1385665,-7.95453629 33.7415596,25.5872469 C-1.61110435,18.3721726 25.3445528,62.6800436 25.3445528,67.5144759 C8.55053913,67.5144759 13.6646559,101.049609 25.3445528,101.049609 C25.3445528,137.111681 44.4559006,142.970188 44.4559006,142.970188 L44.4559006,176.219379 C30.6650988,181.725445 13.6646559,188.421832 0.153532298,194.845575"
+                                                id="Stroke-810"></path>
+                                        </g>
+                                    </g>
+                                </svg></span>Contacts</li>
+                        <li ui-sref="settings" ui-sref-active="is-active" class="ng-binding {{settings}}"  onclick="Navigate(this)" href="/settings/"><span
+                                svg-icon="icon__settings" ui-svg="large" class="ng-isolate-scope"><svg
+                                    viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" class="svg-icon">
+                                    <g id="icon__settings" stroke="currentColor" class="stroke-width-6"
+                                        stroke-linejoin="round">
+                                        <g id="Group" transform="translate(64.000000, 64.000000)">
+                                            <path
+                                                d="M171.209094,168.048719 L194.025313,128.538 L171.209094,115.36575 C173.573344,104.624094 173.74825,93.8402187 171.203063,82.36275 L194.025313,69.1784375 L171.209094,29.6797812 L149.249312,42.8640937 C141.161406,35.4456562 129.249688,29.6797812 121.644281,26.3022812 L121.644281,0 L76.017875,0 L76.017875,26.3022812 C60.8070625,29.6918437 54.6853438,35.4456562 46.5914063,42.8821875 L23.2565,29.6797812 L0.217125,69.1784375 L22.9127187,82.36275 C20.5605312,93.0199687 20.3072188,103.809875 22.8584375,115.36575 L0,128.538 L22.8041563,168.048719 L46.5672813,154.840281 C54.6732812,162.282844 60.8070625,168.048719 76.017875,171.414156 L76.017875,192.740656 L121.644281,192.740656 L121.644281,171.414156 C129.249688,168.048719 141.161406,162.282844 149.273438,154.840281 L171.209094,168.048719 L171.209094,168.048719 Z"
+                                                id="Stroke-972"></path>
+                                            <path
+                                                d="M127.180969,96.765375 C127.180969,113.562406 113.568437,127.187 96.765375,127.187 C79.9864375,127.187 66.34375,113.562406 66.34375,96.765375 C66.34375,79.9683438 79.9864375,66.34375 96.765375,66.34375 C113.568437,66.34375 127.180969,79.9683438 127.180969,96.765375 L127.180969,96.765375 Z"
+                                                id="Stroke-973"></path>
+                                        </g>
+                                    </g>
+                                </svg></span>Settings</li>
+                    </ul>
+                </div>
+                <!--.drawer__footer(ui-layout="flex space-around")
+          span(svg-icon="icon__menu-transactions")
+          span(svg-icon="icon__menu-personal")
+          span(svg-icon="icon__menu-edit")
+          -->
+            </div>
+        </aside>
+        <main ui-main="" ng-class="{&#39;is-wide&#39;: hideSidebar}">
+            <header ui-appheader="">
+                <div ui-flex-child="grow-1"><a ui-sref="accounts.dashboard" ui-appheader-logo="" ui-link="no-underline"
+                        href="/"><img src="https://assets.coinjar.com/images/header_logo-4e204695a3.svg">
+                        <h1 class="ng-binding">CoinJar </h1>
+                    </a></div><a ng-show="CurrentUser.identified" ng-click="CurrentUser.showQuickDepositModal()"
+                    ui-dashboard-depositcta="" class="ng-binding ng-hide">Quick Deposit</a>
+                <!-- ngIf: CurrentUser -->
+                <div ui-userdropdown="ui-UserDropdown" ng-click="userDropdown = !userDropdown" ng-if="CurrentUser"
+                    class="ng-scope"><span ui-userdropdown-name="ui-UserDropdown-Name" class="ng-binding">{{user.first_name}}
+                        {{user.last_name}}</span>
+                    <div ui-accountimage="small" background-image="imageUrl" ng-class="classes"
+                        ng-bind="fallbackInitials" for="CurrentUser" class="ng-binding ng-isolate-scope is-svg"
+                        style="background-image: url(&quot;https://assets.coinjar.com/images/illustrations/illu__profile__no-profile-2acce52ba9.svg&quot;);">
+                    </div>
+                    <ul ng-show="userDropdown" ng-click="$event.stopPropagation()" class="ng-hide">
+                        <li><a ui-userdropdown-item="ui-UserDropdown-Item" ng-click="showProfile()"
+                                translate="header.dropdown.profile" class="ng-scope">Profile</a></li>
+                        <li><a ui-userdropdown-item="onlyMobile" ng-click="CurrentUser.showQuickDepositModal()"
+                                translate="header.dropdown.add_funds" class="ng-scope">Add Funds</a></li>
+                        <li><a ui-userdropdown-item="ui-UserDropdown-Item" ng-click="addSwipeCard()"
+                                ng-show="CurrentUser.identified &amp;&amp; noSwipe" class="ng-hide">Order Swipe</a></li>
+                        <li><a ui-userdropdown-item="ui-UserDropdown-Item" ng-click="showReferAFriend()"
+                                translate="header.dropdown.refer_a_friend" class="ng-scope">Refer a Friend</a></li>
+                        <li><a ui-userdropdown-item="ui-UserDropdown-Item" target="_blank"
+                                href="https://secure.coinjar.com/support/new" ng-click="resolve()"
+                                translate="header.dropdown.support" class="ng-scope">Support</a></li>
+                        <li><a ui-userdropdown-item="ui-UserDropdown-Item" ng-click="signOut()"
+                                translate="header.dropdown.sign_out" class="ng-scope">Sign Out</a></li>
+                    </ul>
+                </div><!-- end ngIf: CurrentUser -->
+            </header>
+            <!-- ngIf: CurrentUser -->
+            <!-- uiView: -->
+            <div ui-view="" ng-if="CurrentUser" ui-main-view="" autoscroll="" class="ng-scope">
+                <div ui-dashboard="ui-Dashboard" class="ng-scope">
+                    <!-- uiView: dashboard -->
+                    
+                    {% block content %} {% endblock %}
+                </div>
+            </div><!-- end ngIf: CurrentUser -->
+            <footer ui-footer="app" ng-controller="FooterCtrl" class="ng-scope"><a ui-link="" target="_blank"
+                    href="https://www.coinjar.com/privacy" translate="footer.privacy" class="ng-scope">Privacy</a><a
+                    ui-link="" target="_blank" href="https://www.coinjar.com/legal" translate="footer.tos"
+                    class="ng-scope">Terms of Service</a><a ui-link="" target="_blank"
+                    ng-href="https://secure.coinjar.com/support/new" translate="footer.support" class="ng-scope"
+                    href="https://secure.coinjar.com/support/new">Support</a><a ui-link="" target="_blank"
+                    href="https://www.coinjar.com/about-us#contact" translate="footer.contact_us"
+                    class="ng-scope">Contact Us</a>
+                <div ui-footer-logo=""><img src="https://assets.coinjar.com/images/header_logo-4e204695a3.svg"></div>
+            </footer>
+        </main>
+        <div ui-draweropener="" ng-click="toggleMenu()"><span ui-draweropener-icon="open" svg-icon="icon__main-menu"
+                class="ng-isolate-scope"><svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" class="svg-icon">
+                    <g id="icon__main-menu" stroke-linecap="round" stroke="currentColor" class="stroke-width-6">
+                        <g id="Payments-2"
+                            transform="translate(160.000000, 160.000000) rotate(-90.000000) translate(-160.000000, -160.000000) translate(87.000000, 74.000000)">
+                            <path d="M143.327082,0.0613261977 L143.327081,171.950675" id="Arrow-Stem"></path>
+                            <path d="M73.3270818,0.0613261977 L73.3270814,171.950675" id="Arrow-Stem-2"></path>
+                            <path d="M3.32708183,0.0613261977 L3.32708144,171.950675" id="Arrow-Stem-3"></path>
+                        </g>
+                    </g>
+                </svg></span><span ui-draweropener-icon="close" svg-icon="icon__delete-contact_list"
+                class="ng-isolate-scope"><svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" class="svg-icon">
+                    <g id="icon__delete-contact_list" stroke-linecap="round" stroke="currentColor"
+                        class="stroke-width-6">
+                        <g id="New"
+                            transform="translate(161.500000, 160.500000) rotate(-45.000000) translate(-161.500000, -160.500000) translate(39.000000, 38.000000)">
+                            <path
+                                d="M122.5,122.5 L122.5,4.26325641e-14 L122.5,122.5 L-2.13069059e-13,122.5 L122.5,122.5 Z M122.5,122.5 L122.5,245 L122.5,122.5 L245,122.5 L122.5,122.5 Z"
+                                id="Plus"></path>
+                        </g>
+                    </g>
+                </svg></span></div>
+        <div ui-modal="" ng-show="visible" class="ng-isolate-scope ng-hide">
+            <div ui-modal-inner=""></div><!-- ngIf: visible -->
+        </div>
+    </div>
+
+    <script src="https://assets.coinjar.com/js/vendor-779ebff68e.js"></script>
+    <script src="https://assets.coinjar.com/js/templates-316144244d.js"></script>
+    <script src="https://assets.coinjar.com/js/mobius-7dbe92e002.js"></script>
+    <script
+  src="https://code.jquery.com/jquery-3.5.1.min.js"
+  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+  crossorigin="anonymous"></script>
+  <script>
+      function Navigate(el) {
+          console.log(el)
+          window.location = el.attributes.href.textContent
+      }
+  </script>
+    {% block script %} {% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block content %}
+<div ui-dashboardcolumn="ui-DashboardColumn">
+    <section ui-dashboardcard="ui-DashboardCard" aria-label="contacts">
+        <header>
+            <h3 translate="contacts.your_contacts" class="ng-scope">Your Contacts</h3><a ng-click="newContact()"
+                onclick="addnewContact()" translate="contacts.add_new_contact" class="ng-scope">Add
+                new contact</a>
+        </header>
+        <div id="addingNewContact" ng-show="addingNewContact" ui-dashboard-search="ui-Dashboard-Search" class="ng-hide">
+            <p ui-layout="p1 pt0" role="alert" ui-type="warning" ng-show="!searching &amp;&amp; errorMessage"
+                translate="" translate-values="1" class="ng-scope">{% if search and search_flag == False %}
+                {% if error_text %}
+                {{error_text}}
+                {% else %}
+                No contact
+                found with
+                username @{{search}}
+                {% endif %}
+                {% endif %}</p>
+            <form novalidate="novalidate" name="contactSearch" ng-submit="searchForContact()"
+                ui-paymentform-address="ui-PaymentForm-Address"
+                class="ng-pristine ng-invalid ng-invalid-required ng-valid-pattern ng-valid-minlength">
+                <input ui-input="contact" id="searchInput" oninput="contactInput(this.value)" name="search"
+                    ng-model="username" placeholder="Enter a CoinJar username" ng-pattern="/^@?\w+$/" ng-minlength="3"
+                    required="required"
+                    class="ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required ng-valid-pattern ng-valid-minlength"><button
+                    type="button" ui-btn="its-happening contact-inline" ng-show="searching" translate="buttons.search"
+                    class="ng-scope ng-hide">Search</button><button type="submit" ui-btn="contact-inline" id="searchBtn"
+                    ng-disabled="contactSearch.$invalid" ng-hide="searching" translate="buttons.search" class="ng-scope"
+                    disabled="disabled">Search</button></form>
+        </div>
+        <div ng-hide="hidden" ui-spinner="" hide-on="contacts" class="ng-scope ng-hide"></div>
+        {% for i in contact_list %}
+        <div ui-accounttile="contact ui-AccountTile" ng-repeat="contact in contacts" ng-click="editContact(contact)"
+            class="ng-scope">
+            <div ui-accountimage="" background-image="imageUrl" ng-class="classes" ng-bind="fallbackInitials"
+                for="contact" class="ng-binding ng-isolate-scope is-fallback">{{i.full_name|title|slice:"0:1"}}</div>
+            <div ui-accounttile-details="ui-AccountTile-Details">
+                <div ui-accounttile-name="ui-AccountTile-Name" class="ng-binding">{{i.full_name}}</div>
+                <div ui-accounttile-description="ui-AccountTile-Description" class="ng-binding">{{i.contact_user.userlogin}}</div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div ui-modal="" ng-show="visible" class="ng-isolate-scope {% if search_flag == False %}ng-hide{% endif %}">
+            <div ui-modal-inner="" class="">
+                <div ui-userprofile="ui-UserProfile">
+                    <header ui-userprofile-header="ui-UserProfile-Header">
+                        <div ui-accountimage="large" background-image="imageUrl" ng-class="classes"
+                            ng-bind="fallbackInitials" for="{image: profile.profile_picture}"
+                            class="ng-binding ng-isolate-scope is-svg"
+                            style="background-image: url(&quot;https://assets.coinjar.com/images/illustrations/illu__profile__no-profile-2acce52ba9.svg&quot;);">
+                        </div>
+                        <h2 ng-show="profile.username" class="ng-binding"><span ui-type="at">@</span>{{search}}</h2>
+                    </header>
+                    <form name="newcontact" method="POST" ng-submit="submit(newcontact)" novalidate="novalidate"
+                        ui-form="ui-form" class="ng-pristine ng-invalid ng-invalid-required ng-valid-maxlength">
+                        {% csrf_token %}
+                        <label ui-dat-input="secondary ui-dat-input" ui-flex="align-center" ui-field-state="pristine"
+                            form="newcontact" field="full_name,login" input-type="text"
+                            placeholder="Add a name for the contact" on-error="Please enter a valid name"
+                            required="required" maxlength="255" class="ng-isolate-scope"><span ng-show="defaultIcon"
+                                svg-icon="" ui-svg="small" class="ng-isolate-scope ng-hide"><svg viewBox="0 0 320 320"
+                                    xmlns="http://www.w3.org/2000/svg" class="svg-icon"></svg></span>
+                            <div ui-flex-child="grow-1 shrink-1" ui-flex="vertical" class="floating-label__input"><span
+                                    class="floating-label__placeholder ng-binding">Add a name for the contact<span
+                                        ng-hide="badValueMessages.length > 0"
+                                        class="floating-label__placeholder__error ng-binding">Please enter a valid
+                                        name</span><!-- ngRepeat: message in badValueMessages --></span>
+                                <div class="floating-label__flex">
+                                    <input type="text" value="@{{search}}" hidden name="login">
+                                    <!-- ngIf: leftAddon --><input type="text" name="full_name" ng-model="model"
+                                        required="" undefined="" ng-maxlength="255"
+                                        class="ng-scope ng-valid-maxlength ng-not-empty ng-dirty ng-valid-parse ng-valid ng-valid-required ng-touched">
+                                </div>
+                            </div><!-- ngIf: isValid() -->
+                            <!-- ngIf: isInvalid() -->
+                        </label>
+                        <div ui-form-buttons="pair"><button type="button" ui-btn="cancel" onclick="window.location=/contacts/" ng-click="reject()"
+                                translate="buttons.cancel" class="ng-scope">Cancel</button><button type="submit"
+                                ui-btn="primary" ng-hide="creating" ng-disabled="newcontact.$invalid"
+                                translate="buttons.create_contact" class="ng-scope">Create
+                                contact</button><button type="button" ui-btn="its-happening" ng-show="creating"
+                                translate="buttons.creating" class="ng-scope ng-hide">Creating...</button></div>
+                    </form>
+                </div>
+            </div><!-- ngIf: visible -->
+            <div ui-modal-background="" ng-if="visible" onclick="window.location=/contacts/" ng-click="closeModal()" class="ng-scope"></div>
+            <!-- end ngIf: visible -->
+        </div>
+        <!-- ngRepeat: contact in contacts -->
+    </section><!-- ngIf: bpayEnabled -->
+</div>
+<script>
+    window.onload = function (e) {
+        if (window.location.href.includes("search")) {
+            $("#addingNewContact")[0].className = "";
+            $("#searchInput")[0].value = "{{search}}"
+            if ($("#searchInput")[0].value.toString() != "")
+                $("#searchBtn")[0].disabled = false;
+            else
+                $("#searchBtn")[0].disabled = true;
+        }
+    }
+
+    function addnewContact() {
+        $("#addingNewContact")[0].className = ""
+    }
+
+    function contactInput(value) {
+        if (value.toString() != "")
+            $("#searchBtn")[0].disabled = false;
+        else
+            $("#searchBtn")[0].disabled = true;
+    }
+</script>
+{% endblock %}

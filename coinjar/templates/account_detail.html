@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% block content %}
+<div ui-view="dashboard" autoscroll="autoscroll" class="ng-scope">
+    <div ui-dashboardcolumn="ui-DashboardColumn" class="ng-scope">
+        <div ui-dashboardbreadcrumbs="ui-DashboardBreadcrumbs"><a ui-sref="accounts.dashboard"
+                translate="statement.accounts" class="ng-scope" href="/">Accounts</a> &gt;
+            <span ui-type="bold" translate="statement.accounts.account_details" class="ng-scope">Account
+                Details</span></div><!-- ngIf: !isRewardAccount -->
+        <div  ui-dashboardcard="ui-DashboardCard" account="account" ng-if="!isRewardAccount"
+            class="ng-scope ng-isolate-scope">
+            <div id="listArrow" onclick="selectCurrency()" ui-accounttransactionhistory="ui-AccountTransactionHistory"
+                ng-class="{'is-open': isOpen}" class="">
+                <div ui-accountimage="" background-image="imageUrl" ng-class="classes" ng-bind="fallbackInitials"
+                    for="account" class="ng-binding ng-isolate-scope"
+                    style="background-image: url(&quot;/static/currency/illu__accounts__{{currency.simbol|lower}}.svg&quot;);">
+                </div>
+                <h1 ui-flex-child="grow-1" class="ng-binding">Everyday
+                    {{currency.name}}</h1>
+                <div ui-accounttransactionhistory-dropdown="ui-AccountTransactionHistory-Dropdown"
+                    ng-class="{'is-open': isOpen}">
+                    <div ui-accounttransactionhistory-downarrow="ui-AccountTransactionHistory-DownArrow"
+                        ng-show="accounts.length > 1" ng-click="isOpen = !isOpen"></div><!-- ngIf: isOpen -->
+                    <nav ng-if="isOpen" id="listData" class="ng-scope ng-hide">
+                        {% for i in user_currency %}
+                        <div ui-accounttile="ui-AccountTile" onclick="listSelectCurrency('{{i.uid}}')"
+                            ng-repeat="account in accounts" account="account" ng-click="routeDefaultAction(account)"
+                            ng-class="{&#39;no-ng-click&#39;: !account.properties.statement &amp;&amp; account.type != &#39;exchange&#39;}"
+                            class="ng-isolate-scope">
+                            <div ui-accountimage="" background-image="imageUrl" ng-class="classes"
+                                ng-bind="fallbackInitials" for="account" class="ng-binding ng-isolate-scope"
+                                style="background-image: url(&quot;/static/currency/illu__accounts__{{i.simbol|lower}}.svg&quot;);">
+                            </div>
+                            <div ui-accounttile-details="ui-AccountTile-Details">
+                                <div ui-accounttile-name="ui-AccountTile-Name" class="ng-binding">Everyday
+                                    {{i.name}}</div>
+                                <div ui-accounttile-description="ui-AccountTile-Description" class="ng-binding">
+                                    {{i.slug}}</div>
+                            </div>
+                            <div ng-switch="account.type">
+                                <!-- ngSwitchWhen: hedged_bucket -->
+                                <!-- ngSwitchWhen: swipe -->
+                                <!-- ngSwitchWhen: swipe_preload -->
+                                <!-- ngSwitchWhen: reward_inactive -->
+                                <!-- ngSwitchWhen: reward -->
+                                <!-- ngSwitchDefault: ng-switch-default -->
+                                <div ng-switch-default="ng-switch-default" class="ng-scope">
+                                    <!-- ngIf: account.balance -->
+                                    <div ui-accounttile-balance="ui-AccountTile-Balance" ng-if="account.balance"
+                                        class="ng-scope"><span ui-amount="primary" currency-amount="account.balance"
+                                            no-rounding="" class="ng-binding ng-isolate-scope"><span
+                                                ui-amount="{{i.simbol}} "
+                                                class="ng-binding">{{i.balance|stringformat:".4f"}}</span></span>
+                                        <div class="computed-amount ng-binding ng-isolate-scope"
+                                            ng-show="amount.currency != to" ui-amount="secondary USD"
+                                            ng-class="flashClass" amount="account.balance">{{i.balance_usd|stringformat:".2f"}}</div>
+                                    </div><!-- end ngIf: account.balance -->
+                                </div><!-- end ngSwitchWhen: -->
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </nav><!-- end ngIf: isOpen -->
+                </div>
+            </div>
+            <div ui-accounttransactionhistory-balance="ui-AccountTransactionHistory-Balance">
+                <div ui-flex-child="shrink-0"><span ui-amount="headline" currency-amount="account.balance"
+                        no-rounding="no-rounding" class="ng-binding ng-isolate-scope"><span ui-amount="BTC "
+                            class="ng-binding">{{currency.balance|stringformat:".4f"}}</span></span>
+                    <div> <span translate="statement.balance.pending" class="ng-scope">Pending: </span><span
+                            currency-amount="account.pendingBalance" no-rounding="no-rounding"
+                            class="ng-binding ng-isolate-scope"><span ui-amount="BTC "
+                                class="ng-binding">0.00</span></span></div>
+                </div>
+                <div ui-layout="pl1" ui-type="right">
+                    <div ui-flex="ui-flex" class="ng-scope">
+                        <!-- ngIf: options.canDeposit && CurrentUser.identified -->
+                        <!-- ngIf: options.hasEntryPoints --><a ui-btn="secondary" ui-layout="mr0.5"
+                            ng-click="showAccountAddress()" ng-if="options.hasEntryPoints"
+                            translate="statement.options.view_address" onclick="addressModal(true)" class="ng-scope">View address</a>
+                        <!-- end ngIf: options.hasEntryPoints -->
+                        <div ui-account-options="ui-Account-Options" onclick="accountDropdownShow()" ng-click="accountDropdown = !accountDropdown"><a
+                                ui-account-options-btn="ui-Account-Options-Btn" ui-btn="next padded"
+                                translate="statement.options.actions" class="ng-scope">Actions</a>
+                            <ul id="accountDropdown" ng-show="accountDropdown" ng-click="$event.stopPropagation()" class="ng-hide">
+                                <li><a ui-account-options-item="ui-Account-Options-Item"
+                                        ng-click="showAccountDetails()">
+                                        <!-- ngIf: (options.forType == 'swipe') -->
+                                        <!-- ngIf: !(options.forType == 'swipe') --><span
+                                            ng-if="!(options.forType == &#39;swipe&#39;)"
+                                            translate="statement.options.edit_account" class="ng-scope">Edit
+                                            account</span><!-- end ngIf: !(options.forType == 'swipe') --></a>
+                                </li>
+                                <li>
+                                    <!-- ngIf: options.hasEntryPoints === true --><a
+                                        ui-account-options-item="ui-Account-Options-Item"
+                                        ng-click="showAccountAddress()" ng-if="options.hasEntryPoints === true"
+                                        translate="statement.options.view_address" onclick="addressModal(true)" class="ng-scope">View address</a>
+                                    <!-- end ngIf: options.hasEntryPoints === true -->
+                                </li>
+                                <li>
+                                    <!-- ngIf: options.canMakePayment --><a
+                                        ui-account-options-item="ui-Account-Options-Item"
+                                        ui-sref="payment-action({ action: &#39;pay&#39; })" ng-click=""
+                                        ng-if="options.canMakePayment" translate="statement.options.make_a_payment"
+                                        class="ng-scope" href="/payments/">Make a
+                                        payment...</a>
+                                    <!-- end ngIf: options.canMakePayment -->
+                                </li>
+                                <li>
+                                    <!-- ngIf: (options.forType == 'swipe') && (options.isActive) -->
+                                </li>
+                                <li>
+                                    <!-- ngIf: (options.forType == 'swipe') && (options.isActive) -->
+                                </li>
+                                <li>
+                                    <!-- ngIf: (options.forType == 'swipe') && !(options.isActive) -->
+                                </li>
+                                <li>
+                                    <!-- ngIf: (options.forType == 'swipe') && (options.isActive) -->
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- ngIf: account.noticeTitle -->
+            <div ng-click="isOpen = false">
+                <div ui-accounttransactionhistory-row="heading">
+                    <div ui-accounttransactionhistory-row-icon="ui-AccountTransactionHistory-Row-Icon"
+                        translate="statement.transactions.date" class="ng-scope">Date</div>
+                    <div ui-accounttransactionhistory-row-date="ui-AccountTransactionHistory-Row-Date">&nbsp;</div>
+                    <div ui-accounttransactionhistory-row-description="ui-AccountTransactionHistory-Row-Description"
+                        translate="statement.transactions.description" class="ng-scope">Description</div>
+                    <div ui-accounttransactionhistory-row-amount="ui-AccountTransactionHistory-Row-Amount"
+                        translate="statement.transactions.amount" class="ng-scope">Amount</div>
+                </div><!-- ngRepeat: month in transactionsByMonth -->
+                <div ui-accounttransactionhistory-row="loading" ng-show="loading" class="ng-hide">
+                    <div ng-hide="hidden" ui-spinner="" class="ng-scope"></div>
+                </div>
+            </div>
+            <div ui-form-buttons="multiple">
+                {% for i in transactions %}
+                <div ui-accounttransactionhistory-row="ui-AccountTransactionHistory-Row" ng-repeat-end="ng-repeat-end"
+                    ng-repeat="transaction in month" ng-click="showTransactionDetail(transaction)"
+                    ng-class="'is-' + transaction.details.direction" class="ng-scope is-incoming">
+                    <div ui-accounttransactionhistory-row-icon="ui-AccountTransactionHistory-Row-Icon">
+                        <div ui-accountimage="" background-image="imageUrl" ng-class="classes" ng-bind="fallbackInitials"
+                            for="transaction[transaction.them]" class="ng-binding ng-isolate-scope"
+                            style="background-image: url(&quot;/static/currency/illu__accounts__{{i.wallet|lower}}.svg&quot;);">
+                        </div>
+                    </div>
+                    <div ui-accounttransactionhistory-row-date="ui-AccountTransactionHistory-Row-Date" class="ng-binding">{{i.date}}
+                    </div>
+                    <div ui-accounttransactionhistory-row-description="ui-AccountTransactionHistory-Row-Description"><span
+                            ng-bind-html="transaction.descriptionHtml" class="ng-binding">
+                            <em>{{i.description}}</em></span><span ng-show="transaction.details.pending"
+                            ui-type="warning 12pt upcase" class="ng-binding">&nbsp;{{i.status}}</span></div>
+                    <div ui-accounttransactionhistory-row-amount="ui-AccountTransactionHistory-Row-Amount"><span
+                            currency-amount="transaction.details.amount" ui-amount="no-currency" no-rounding="no-rounding"
+                            show-sign="show-sign" ng-hide="transaction.details.amount.fractional == 0"
+                            class="ng-binding ng-isolate-scope"><span ui-amount="BTC +" class="ng-binding">{{i.amount}}</span></span>
+                    </div>
+                </div>
+                {% endfor %}
+                {% if trans %}
+                <div ng-show="noMorePages" ui-layout="p1" translate="statement.transactions.no_earlier_transactions"
+                    class="ng-scope">No earlier transactions</div>
+                {% endif %}
+            </div>
+        </div><!-- end ngIf: !isRewardAccount -->
+        <!-- ngIf: isRewardAccount -->
+    </div>
+</div>
+<div ui-modal="" id="addressModal" ng-show="visible" class="ng-isolate-scope ng-hide">
+    <div ui-modal-inner="" class="">
+        <section ui-entrypoint="ui-EntryPoint">
+            <h2 translate="components.entry_point.account_address" class="ng-scope">Account address</h2>
+            <div ui-entrypoint-barcode="ui-EntryPoint-Barcode"><a ng-href="{{wallet.address}}"
+                    href="{{wallet.address}}"><img
+                        ng-src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOQAAADkAQAAAACgLLUgAAADBUlEQVR4nO2Y243kQAhFqU0AMqj8wyIDiIA9t/q/v4aRVlpL3bZckss87gP/mS9H/bFvx//Vf2L1nBMdEVyZBZecQzeX9/UZs+zsttO6x/lzczkbiszN41rdNKuw+tz8hSqQXM+JCiIe18Y/9eSvq7eKiJXguoTrP/fkL6tT5FZtFT7mlaEcT23v24f+pcDmbuFBmTnr5vK+IsRODiIk8raqLt1c72d66vq9Cp2IAfC08r68b4zat6toKudEgQm8e5s3KCWhiivy9gNQQmBl23l2H2p75yRAcmu/NPP1fd7IBrMZfk89pkxreGvW8yyiCFeJvUYpv/DWPk+Wu4QIQF3UKCVIFHdyu75wxFQiR22UmXR7X15jPV5XsEGKvfym6MIT4lzXQVQgz1DPpsLwBQkm6v144UX6CHL2Ex/dF3XUOm9IBaPlN9TNhS6wZdq+HjWkIQW8Su1Rmu3eXucrmhc9CtU30jEbnmLn9frCyicwHMeRoW4YS4H7ep7lKA0xGqh57MLQ+S72+0qYkQTKb+T7fyjarq96l3JeIIzbaOVbTLndV+0txY98fsNt+OuPg9/1V1TzeXWkQHASspT2dR28eI3HkFAGk5F6GTSt4xckQZTnBZyk97xXaP+JJ39b1WhUj49prOewaj7D4TqORiwxaMPtZ9obB23b9Y188+/gId92jjTE+A88+ftqun+mT1I70BXyJPO8Xt97EvlTpjWjdBYmdnJ/XigZdrD0KSnAfeY99/XXlVlAexUzfv2q3Nbr+AVE+l2UEHomwzn2fPQ6b0TEow6NgyYjWZb7vu644m2mlDGJA20Gg6zPKYR4GIh8SDSBu2alN7xs69GL0+u0y11BICabFdvx6tOceyD3lBf4vgzL5W3rwryBv2Q7gLBcBzzS+77uvPhMYiS/AY8UZucX9FfaQIwYOwfBuJ0ez3V+1qGRbJj3q1Xl4T1iX3/1vQ63HPo8+EbQc8v29Uif5lyD0cn35Vku4NynSLv41ae5mhF4R2c5rXqDynp9/68ur/4FbUbUrMLF0W0AAAAASUVORK5CYII="
+                        ui-shadow="floating"
+                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOQAAADkAQAAAACgLLUgAAADBUlEQVR4nO2Y243kQAhFqU0AMqj8wyIDiIA9t/q/v4aRVlpL3bZckss87gP/mS9H/bFvx//Vf2L1nBMdEVyZBZecQzeX9/UZs+zsttO6x/lzczkbiszN41rdNKuw+tz8hSqQXM+JCiIe18Y/9eSvq7eKiJXguoTrP/fkL6tT5FZtFT7mlaEcT23v24f+pcDmbuFBmTnr5vK+IsRODiIk8raqLt1c72d66vq9Cp2IAfC08r68b4zat6toKudEgQm8e5s3KCWhiivy9gNQQmBl23l2H2p75yRAcmu/NPP1fd7IBrMZfk89pkxreGvW8yyiCFeJvUYpv/DWPk+Wu4QIQF3UKCVIFHdyu75wxFQiR22UmXR7X15jPV5XsEGKvfym6MIT4lzXQVQgz1DPpsLwBQkm6v144UX6CHL2Ex/dF3XUOm9IBaPlN9TNhS6wZdq+HjWkIQW8Su1Rmu3eXucrmhc9CtU30jEbnmLn9frCyicwHMeRoW4YS4H7ep7lKA0xGqh57MLQ+S72+0qYkQTKb+T7fyjarq96l3JeIIzbaOVbTLndV+0txY98fsNt+OuPg9/1V1TzeXWkQHASspT2dR28eI3HkFAGk5F6GTSt4xckQZTnBZyk97xXaP+JJ39b1WhUj49prOewaj7D4TqORiwxaMPtZ9obB23b9Y188+/gId92jjTE+A88+ftqun+mT1I70BXyJPO8Xt97EvlTpjWjdBYmdnJ/XigZdrD0KSnAfeY99/XXlVlAexUzfv2q3Nbr+AVE+l2UEHomwzn2fPQ6b0TEow6NgyYjWZb7vu644m2mlDGJA20Gg6zPKYR4GIh8SDSBu2alN7xs69GL0+u0y11BICabFdvx6tOceyD3lBf4vgzL5W3rwryBv2Q7gLBcBzzS+77uvPhMYiS/AY8UZucX9FfaQIwYOwfBuJ0ez3V+1qGRbJj3q1Xl4T1iX3/1vQ63HPo8+EbQc8v29Uif5lyD0cn35Vku4NynSLv41ae5mhF4R2c5rXqDynp9/68ur/4FbUbUrMLF0W0AAAAASUVORK5CYII="></a>
+            </div>
+            <div ui-entrypoint-details="ui-EntryPoint-Details"><a ui-link="on-dark" ui-type="18pt"
+                    class="ng-binding">{{wallet.address}}</a>
+                <!-- ngIf: entryPoint.currency_code == 'XRP' -->
+                <!-- ngIf: entryPoint.currency_code == 'XLM' -->
+                <p ui-type="white bold" ui-layout="mt1 mb0.5" class="ng-binding">Only send {{wallet.name}} to this address
+                </p>
+                <p ui-type="white" ui-layout="mb1" class="ng-binding">Any other asset sent to this address, including
+                    Bitcoin Cash and USDT, will be permanently lost.</p><!-- ngIf: entryPoint.currency_code == 'LTC' -->
+            </div>
+            <div ui-form-buttons="pair"><button type="button" ui-btn="clear" ng-click="reject()"
+                    translate="buttons.close" onclick="addressModal(false)" class="ng-scope">Close</button><button type="button" ui-btn="clear"
+                    ng-click="resolve()" ui-sref="payment-action({ action: 'request' })" translate="buttons.request"
+                    class="ng-scope" onclick="window.location.href='/payments/?tab=request'">Request...</button></div>
+        </section>
+    </div><!-- ngIf: visible -->
+    <div ui-modal-background="" ng-if="visible" ng-click="closeModal()" class="ng-scope"></div>
+    <!-- end ngIf: visible -->
+</div>
+<script>
+    function selectCurrency() {
+        console.log(1)
+        var listArrow = $("#listArrow")
+        if (listArrow[0].className.includes("is-open")) {
+            listArrow[0].className = ""
+            $("#listData")[0].className = "ng-scope ng-hide"
+        } else {
+            listArrow[0].className = "is-open"
+            $("#listData")[0].className = "ng-scope"
+        }
+    }
+    function listSelectCurrency(uid){
+        window.location.href = `/accounts/${uid}`
+    }
+    function addressModal(type) {
+        if(type){
+            $("#addressModal")[0].className = "ng-isolate-scope"
+        }
+        else{
+            $("#addressModal")[0].className = "ng-isolate-scope ng-hide"
+        }
+    }
+    function accountDropdownShow() {
+        var accountDropdown = $("#accountDropdown")
+        if (accountDropdown[0].className.includes("ng-hide")) {
+            accountDropdown[0].className = ""
+        } else {
+            accountDropdown[0].className = "ng-hide"
+        }
+    }
+</script>
+{% endblock %}

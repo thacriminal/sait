@@ -1,0 +1,443 @@
+{% extends 'base.html' %}
+{% block content %}
+<div ui-view="dashboard" autoscroll="autoscroll" class="ng-scope">
+  <div ui-dashboardcolumn="ui-DashboardColumn" class="ng-scope">
+    <!-- ngIf: !CurrentUser.identified && !CurrentUser.legal_name -->
+    <section ng-if="!CurrentUser.identified &amp;&amp; !CurrentUser.legal_name" ui-dashboardcard="welcome"
+      aria-label="welcome" class="ng-scope">
+      <div>
+        <p translate="dashboard.banners.getting_started.text_1" class="ng-scope">CoinJar is
+          global, simple and secure.</p>
+        <p translate="dashboard.banners.getting_started.text_2" class="ng-scope">Learn how
+          to get started.</p>
+      </div><a ui-link="primary" ng-click="showWelcomeVideo()" translate="dashboard.banners.getting_started.link"
+        class="ng-scope">Watch video</a>
+    </section><!-- end ngIf: !CurrentUser.identified && !CurrentUser.legal_name -->
+    <!-- ngIf: !CurrentUser.identified && CurrentUser.legal_name -->
+    <!-- ngIf: CurrentUser.identified && !CurrentUser.features.exchange && (gettingStarted.noSwipe && gettingStarted.noOrderedSwipe) -->
+    <!-- ngIf: CurrentUser.identified && CurrentUser.features.exchange -->
+    <header ui-alert-box="box " type="info" icon="account__mfa--totp" title="Turn on Enhanced Security"
+      body="Protect your CoinJar by adding Enhanced Security, also known as two-factor authentication. Setup is simple, and requires just your smartphone or an app. Click to get started now."
+      ui-sref="settings" ng-hide="gettingStarted.addedMfa" class="ng-isolate-scope" href="/settings"><a
+        ui-alert-close="ui-Alert-Close" ng-show="dismissable" class="ng-hide">╳</a>
+      <div ui-illustration="medium account__mfa--totp" ng-show="icon"></div>
+      <div ui-alert-details="ui-Alert-Details">
+        <h3 translate="Turn on Enhanced Security" class="ng-scope">Turn on Enhanced Security
+        </h3>
+        <p translate="Protect your CoinJar by adding Enhanced Security, also known as two-factor authentication. Setup is simple, and requires just your smartphone or an app. Click to get started now."
+          class="ng-scope">Protect your CoinJar by adding Enhanced Security, also known as
+          two-factor authentication. Setup is simple, and requires just your smartphone or
+          an app. Click to get started now.</p>
+      </div>
+    </header>
+    <section ui-dashboardcard="ui-DashboardCard" aria-label="accounts">
+      <header>
+        <h3 translate="dashboard.accounts" class="ng-scope">Accounts</h3><a ui-link="underlined"
+          ng-click="addNewAccount()" translate="dashboard.accounts.add_account" onclick="showAccountModal(true)" class="ng-scope">Add an account</a>
+      </header>
+      <div ng-hide="hidden" ui-spinner="" hide-on="accounts" class="ng-scope ng-hide"></div>
+      <!-- Account tiles-->
+      <!-- ngRepeat: account in accounts -->
+      {% for i in user_currency %}
+      <div ui-accounttile="ui-AccountTile" onclick="accountDetail('{{i.uid}}')" ng-repeat="account in accounts" account="account"
+        ng-click="routeDefaultAction(account)"
+        ng-class="{&#39;no-ng-click&#39;: !account.properties.statement &amp;&amp; account.type != &#39;exchange&#39;}"
+        class="ng-isolate-scope">
+        <div ui-accountimage="" background-image="imageUrl" ng-class="classes" ng-bind="fallbackInitials" for="account"
+          class="ng-binding ng-isolate-scope"
+          style="background-image: url(&quot;/static/currency/illu__accounts__{{i.simbol|lower}}.svg&quot;);">
+        </div>
+        <div ui-accounttile-details="ui-AccountTile-Details">
+          <div ui-accounttile-name="ui-AccountTile-Name" class="ng-binding">Everyday
+            {{i.name}}</div>
+          <div ui-accounttile-description="ui-AccountTile-Description" class="ng-binding">
+            {{i.slug}}</div>
+        </div>
+        <div ng-switch="account.type">
+          <!-- ngSwitchWhen: hedged_bucket -->
+          <!-- ngSwitchWhen: swipe -->
+          <!-- ngSwitchWhen: swipe_preload -->
+          <!-- ngSwitchWhen: reward_inactive -->
+          <!-- ngSwitchWhen: reward -->
+          <!-- ngSwitchDefault: ng-switch-default -->
+          <div ng-switch-default="ng-switch-default" class="ng-scope">
+            <!-- ngIf: account.balance -->
+            <div ui-accounttile-balance="ui-AccountTile-Balance" ng-if="account.balance" class="ng-scope"><span
+                ui-amount="primary" currency-amount="account.balance" no-rounding=""
+                class="ng-binding ng-isolate-scope"><span ui-amount="{{i.simbol}} " class="ng-binding">{{i.balance|stringformat:".4f"}}</span></span>
+              <div class="computed-amount ng-binding ng-isolate-scope" ng-show="amount.currency != to"
+                ui-amount="secondary USD" ng-class="flashClass" amount="account.balance">{{i.balance_usd|stringformat:".2f"}}</div>
+            </div><!-- end ngIf: account.balance -->
+          </div><!-- end ngSwitchWhen: -->
+        </div>
+      </div>
+      {% endfor %}
+
+      <!-- ngIf: rewardAccount() -->
+      <div ui-accounttile="ui-AccountTile" account="rewardAccount()" ng-click="routeDefaultAction(rewardAccount())"
+        ng-if="rewardAccount()" class="ng-scope ng-isolate-scope">
+        <div ui-accountimage="" background-image="imageUrl" ng-class="classes" ng-bind="fallbackInitials" for="account"
+          class="ng-binding ng-isolate-scope"
+          style="background-image: url(&quot;https://assets.coinjar.com/images/illustrations/illu__accounts__rewards-8497d5dac7.svg&quot;);">
+        </div>
+        <div ui-accounttile-details="ui-AccountTile-Details">
+          <div ui-accounttile-name="ui-AccountTile-Name" class="ng-binding">CoinJar
+            Rewards</div>
+          <div ui-accounttile-description="ui-AccountTile-Description" class="ng-binding">
+            CoinJar Points</div>
+        </div>
+        <div ng-switch="account.type">
+          <!-- ngSwitchWhen: hedged_bucket -->
+          <!-- ngSwitchWhen: swipe -->
+          <!-- ngSwitchWhen: swipe_preload -->
+          <!-- ngSwitchWhen: reward_inactive -->
+          <div ng-switch-when="reward_inactive" class="ng-scope">
+            <div ui-accounttile-balance="pending">
+              <div ui-amount="no-currency secondary" class="ng-binding">Activate
+                account...</div>
+            </div>
+          </div><!-- end ngSwitchWhen: -->
+          <!-- ngSwitchWhen: reward -->
+          <!-- ngSwitchDefault: ng-switch-default -->
+        </div>
+      </div><!-- end ngIf: rewardAccount() -->
+      <!-- Footers-->
+      <!-- ngIf: !CurrentUser.identified -->
+      <footer ng-if="!CurrentUser.identified" class="ng-scope"><span translate="dashboard.footers.get_verified.text"
+          class="ng-scope">Get verified to
+          buy and sell bitcoin, and more. </span> <a ng-href="/identity" ui-link="primary" ui-type="unbroken"
+          translate="dashboard.footers.get_verified.link" class="ng-scope" href="https://app.coinjar.com/identity">Get
+          verified now</a>
+      </footer><!-- end ngIf: !CurrentUser.identified -->
+      <!-- ngIf: CurrentUser.identified && CurrentUser.features.altcoin -->
+      <footer
+        ng-show="!CurrentUser.features.altcoin &amp;&amp; ((CurrentUser.identified &amp;&amp; (gettingStarted.noSwipe &amp;&amp; gettingStarted.noOrderedSwipe)))"
+        class="ng-hide"><span translate="dashboard.footers.order_swipe.text" class="ng-scope">With CoinJar Swipe, every
+          Australian business accepts
+          bitcoin.</span> <a ng-click="addSwipeCard()" ui-link="primary" ui-type="unbroken"
+          translate="dashboard.footers.order_swipe.link" class="ng-scope">Order now</a></footer>
+      <footer
+        ng-show="!CurrentUser.features.altcoin &amp;&amp; CurrentUser.identified &amp;&amp; !gettingStarted.noOrderedSwipe &amp;&amp; gettingStarted.noSwipe"
+        class="ng-hide"><span translate="dashboard.footers.complete_swipe.text" class="ng-scope">Only one step left
+          until your CoinJar Swipe order is
+          complete!</span> <a ui-sref="payment-action({action: &#39;preload-swipe&#39;})" ui-link="primary"
+          ui-type="unbroken" translate="dashboard.footers.complete_swipe.link" class="ng-scope"
+          href="https://app.coinjar.com/payments/preload-swipe">Complete order now</a>
+      </footer>
+    </section>
+    <section ui-dashboardcard="half" aria-label="exchange rates">
+      <header>
+        <h3 translate="dashboard.exchange_rates" class="ng-scope">Exchange Rates</h3><a ui-link="underlined"
+          ng-show="CurrentUser.identified" ui-sref="payment-action({action: &#39;buy-bitcoin&#39;})"
+          translate="dashboard.exchange_rates.buy_bitcoin" class="ng-scope ng-hide"
+          href="https://app.coinjar.com/payments/buy-bitcoin">Buy Bitcoin</a>
+      </header>
+      <div ui-flex-child="grow-1">
+        <div ng-hide="hidden" ui-spinner="" hide-on="prices" class="ng-scope ng-hide"></div>
+        <!-- ngRepeat: price in prices -->
+        <div ui-accounttile="ui-AccountTile" ng-repeat="price in prices" account="price"
+          class="ng-scope ng-isolate-scope">
+          <div ui-accountimage="" background-image="imageUrl" ng-class="classes" ng-bind="fallbackInitials"
+            for="account" class="ng-binding ng-isolate-scope"
+            style="background-image: url(&quot;https://assets.coinjar.com/images/illustrations/illu__currency__btc-c17105c730.svg&quot;);">
+          </div>
+          <div ui-accounttile-details="ui-AccountTile-Details">
+            <div ui-accounttile-name="ui-AccountTile-Name" class="ng-binding">CoinJar
+              Buy Price</div>
+            <div ui-accounttile-description="ui-AccountTile-Description" class="ng-binding"></div>
+          </div>
+          <div ng-switch="account.type">
+            <!-- ngSwitchWhen: hedged_bucket -->
+            <!-- ngSwitchWhen: swipe -->
+            <!-- ngSwitchWhen: swipe_preload -->
+            <!-- ngSwitchWhen: reward_inactive -->
+            <!-- ngSwitchWhen: reward -->
+            <!-- ngSwitchDefault: ng-switch-default -->
+            <div ng-switch-default="ng-switch-default" class="ng-scope">
+              <!-- ngIf: account.balance -->
+              <div ui-accounttile-balance="ui-AccountTile-Balance" ng-if="account.balance" class="ng-scope"><span
+                  ui-amount="primary" currency-amount="account.balance" no-rounding=""
+                  class="ng-binding ng-isolate-scope"><span ui-amount="USD " class="ng-binding">10,751.00</span></span>
+                <div class="computed-amount ng-binding ng-isolate-scope ng-hide" ng-show="amount.currency != to"
+                  ui-amount="secondary USD" ng-class="flashClass" amount="account.balance">10,751.00</div>
+              </div><!-- end ngIf: account.balance -->
+            </div><!-- end ngSwitchWhen: -->
+          </div>
+        </div><!-- end ngRepeat: price in prices -->
+        <div ui-accounttile="ui-AccountTile" ng-repeat="price in prices" account="price"
+          class="ng-scope ng-isolate-scope">
+          <div ui-accountimage="" background-image="imageUrl" ng-class="classes" ng-bind="fallbackInitials"
+            for="account" class="ng-binding ng-isolate-scope"
+            style="background-image: url(&quot;https://assets.coinjar.com/images/illustrations/illu__currency__btc-c17105c730.svg&quot;);">
+          </div>
+          <div ui-accounttile-details="ui-AccountTile-Details">
+            <div ui-accounttile-name="ui-AccountTile-Name" class="ng-binding">CoinJar
+              Sell Price</div>
+            <div ui-accounttile-description="ui-AccountTile-Description" class="ng-binding"></div>
+          </div>
+          <div ng-switch="account.type">
+            <!-- ngSwitchWhen: hedged_bucket -->
+            <!-- ngSwitchWhen: swipe -->
+            <!-- ngSwitchWhen: swipe_preload -->
+            <!-- ngSwitchWhen: reward_inactive -->
+            <!-- ngSwitchWhen: reward -->
+            <!-- ngSwitchDefault: ng-switch-default -->
+            <div ng-switch-default="ng-switch-default" class="ng-scope">
+              <!-- ngIf: account.balance -->
+              <div ui-accounttile-balance="ui-AccountTile-Balance" ng-if="account.balance" class="ng-scope"><span
+                  ui-amount="primary" currency-amount="account.balance" no-rounding=""
+                  class="ng-binding ng-isolate-scope"><span ui-amount="USD " class="ng-binding">10,722.89</span></span>
+                <div class="computed-amount ng-binding ng-isolate-scope ng-hide" ng-show="amount.currency != to"
+                  ui-amount="secondary USD" ng-class="flashClass" amount="account.balance">10,722.89</div>
+              </div><!-- end ngIf: account.balance -->
+            </div><!-- end ngSwitchWhen: -->
+          </div>
+        </div><!-- end ngRepeat: price in prices -->
+      </div>
+      <footer><span translate="dashboard.exchange_rates.new_to_bitcoin_text" class="ng-scope">New to bitcoin?</span> <a
+          ui-link="primary underlined" target="_blank" ui-type="unbroken"
+          href="https://support.coinjar.com/hc/en-us/articles/202909475"
+          translate="dashboard.exchange_rates.new_to_bitcoin_link" class="ng-scope">Learn
+          more</a></footer>
+    </section>
+    <section ui-dashboardcard="half" aria-label="getting-started">
+      <header>
+        <h3 translate="dashboard.getting_started" class="ng-scope">Getting Started</h3><a ui-link="underlined"
+          href="https://support.coinjar.com/" target="_blank" translate="dashboard.getting_started.support"
+          class="ng-scope">Support</a>
+      </header>
+      <section ui-paymentmodal-list="rounded-bottom" ui-type="14pt" ui-flex-child="grow-1">
+        <ol ui-list="ui-list">
+          <li><span ng-hide="gettingStarted.identified" ui-illustration="small inline verification__id__license"></span>
+            <div ui-layout="m0-1" ng-show="gettingStarted.identified" svg-icon="icon__verification-tick"
+              ui-svg="white on-green large" ui-flex-child="shrink-0" class="ng-isolate-scope ng-hide"><svg
+                viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" class="svg-icon">
+                <g id="icon__verification-tick" fill="currentColor">
+                  <path
+                    d="M253.631801,119.763993 L150.56076,223.654285 C147.59187,226.648123 141.727498,229.096509 137.52293,229.096509 L128.620339,229.096509 C124.41985,229.096509 118.555477,226.644022 115.590665,223.654285 L67.0525813,174.616853 C64.0877697,171.618914 64.0918479,166.726244 67.0648157,163.740608 L86.1668477,144.530828 C89.1357374,141.53699 94.0009646,141.53699 96.9739325,144.522626 L127.984148,175.64214 C130.961194,178.631877 135.822343,178.623675 138.791233,175.633938 L223.787935,89.9609476 C226.752746,86.9712104 231.622052,86.9548058 234.603176,89.9363407 L253.603254,108.908253 C256.584378,111.889788 256.596613,116.770155 253.631801,119.763993 L253.631801,119.763993 Z"
+                    id="Imported-Layers"></path>
+                </g>
+              </svg></div>
+            <p><span translate="dashboard.getting_started.verify_identity_text" class="ng-scope">Verify your identity
+                and unlock extra CoinJar
+                features.</span> <a ui-link="primary underlined" ng-href="/identity" ng-hide="gettingStarted.identified"
+                translate="dashboard.getting_started.verify_identity_link" class="ng-scope"
+                href="https://app.coinjar.com/identity">Get
+                verified now</a></p>
+          </li>
+          <li><span ng-hide="gettingStarted.addedMfa"
+              ui-illustration="small inline verification__extra-security"></span>
+            <div ui-layout="m0-1" ng-show="gettingStarted.addedMfa" svg-icon="icon__verification-tick"
+              ui-svg="white on-green large" ui-flex-child="shrink-0" class="ng-isolate-scope ng-hide"><svg
+                viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" class="svg-icon">
+                <g id="icon__verification-tick" fill="currentColor">
+                  <path
+                    d="M253.631801,119.763993 L150.56076,223.654285 C147.59187,226.648123 141.727498,229.096509 137.52293,229.096509 L128.620339,229.096509 C124.41985,229.096509 118.555477,226.644022 115.590665,223.654285 L67.0525813,174.616853 C64.0877697,171.618914 64.0918479,166.726244 67.0648157,163.740608 L86.1668477,144.530828 C89.1357374,141.53699 94.0009646,141.53699 96.9739325,144.522626 L127.984148,175.64214 C130.961194,178.631877 135.822343,178.623675 138.791233,175.633938 L223.787935,89.9609476 C226.752746,86.9712104 231.622052,86.9548058 234.603176,89.9363407 L253.603254,108.908253 C256.584378,111.889788 256.596613,116.770155 253.631801,119.763993 L253.631801,119.763993 Z"
+                    id="Imported-Layers"></path>
+                </g>
+              </svg></div>
+            <p><span translate="dashboard.getting_started.add_mfa_text" class="ng-scope">Add extra account security with
+                your mobile
+                device.</span> <a ui-link="primary underlined" href="https://app.coinjar.com/settings#mfa"
+                ng-hide="gettingStarted.addedMfa" translate="dashboard.getting_started.add_mfa_link"
+                class="ng-scope">Add enhanced security</a></p>
+          </li>
+          <li><span ng-hide="gettingStarted.linkedBankAccounts"
+              ui-illustration="small inline verification__bank"></span>
+            <div ui-layout="m0-1" ng-show="gettingStarted.linkedBankAccounts" svg-icon="icon__verification-tick"
+              ui-svg="white on-green large" ui-flex-child="shrink-0" class="ng-isolate-scope ng-hide"><svg
+                viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" class="svg-icon">
+                <g id="icon__verification-tick" fill="currentColor">
+                  <path
+                    d="M253.631801,119.763993 L150.56076,223.654285 C147.59187,226.648123 141.727498,229.096509 137.52293,229.096509 L128.620339,229.096509 C124.41985,229.096509 118.555477,226.644022 115.590665,223.654285 L67.0525813,174.616853 C64.0877697,171.618914 64.0918479,166.726244 67.0648157,163.740608 L86.1668477,144.530828 C89.1357374,141.53699 94.0009646,141.53699 96.9739325,144.522626 L127.984148,175.64214 C130.961194,178.631877 135.822343,178.623675 138.791233,175.633938 L223.787935,89.9609476 C226.752746,86.9712104 231.622052,86.9548058 234.603176,89.9363407 L253.603254,108.908253 C256.584378,111.889788 256.596613,116.770155 253.631801,119.763993 L253.631801,119.763993 Z"
+                    id="Imported-Layers"></path>
+                </g>
+              </svg></div>
+            <p><span translate="dashboard.getting_started.link_bank_account_text" class="ng-scope">Withdraw your CoinJar
+                funds to a bank of your
+                choice.</span> <a ui-link="primary underlined" href="https://app.coinjar.com/settings#bank-accounts"
+                ng-hide="gettingStarted.linkedBankAccounts" translate="dashboard.getting_started.link_bank_account_link"
+                class="ng-scope">Link a bank account</a></p>
+          </li>
+        </ol>
+      </section>
+    </section>
+  </div>
+</div>
+<div ui-modal="" id="addaccount" ng-show="visible" class="ng-isolate-scope">
+  <div ui-modal-inner="" class="">
+    <article ui-paymentmodal="full">
+      <h2>Add New Account</h2>
+      <section ui-mfaform-section="first">
+        <p>Within your CoinJar, each different type of currency you own is stored in its own separate account.<a
+            ui-link="primary underlined" target="_blank" ui-type="unbroken"
+            href="https://support.coinjar.com/hc/en-us/articles/202184769">More about Accounts.</a></p>
+      </section>
+      <form ng-submit="submit(selectedCurrency)" ng-controller="addAccountCtrl" ui-form="ui-form"
+        novalidate="novalidate" class="ng-pristine ng-valid ng-scope ng-valid-required">
+        <div ui-form-general-error="ui-form-general-error" ng-show="errorMessage" class="ng-binding ng-hide">
+          <p><a ui-link="underlined" ui-type="unbroken"
+              href="https://support.coinjar.com/access/login?return_to=%2Fhc%2Fen-us%2Frequests%2Fnew">Contact
+              support.</a></p>
+        </div>
+        <div ui-accountadder="ui-AccountAdder">
+          <!-- ngRepeat: currency in currencies -->
+          <label ui-accountadder-item="ui-AccountAdder-Item"
+            ng-repeat="currency in currencies"
+            ng-class="{'isDisabled': currency.isDisabled, 'isActive': currency==selectedCurrency}" onclick="selectCurrency(this)"
+            class="currency-select ng-scope {% if 'Bitcoin' in a %} isDisabled {% endif %}">
+            <div ui-illustration="small accounts__bitcoin"></div>
+            <div ui-type="16pt" class="ng-binding">Bitcoin
+              <!-- ngIf: currency.preview -->
+            </div>
+            <div ui-type="12pt light" class="ng-binding">Digital Currency</div><input
+              ui-accountadder-target="ui-AccountAdder-Target" type="radio" name="currency" ng-model="currency.currency"
+              value="BTC" ng-click="activate(currency)" required="required" ng-disabled="false"
+              class="ng-pristine ng-untouched ng-valid ng-not-empty ng-valid-required">
+          </label><!-- end ngRepeat: currency in currencies -->
+          <label ui-accountadder-item="ui-AccountAdder-Item"
+            ng-repeat="currency in currencies"
+            ng-class="{'isDisabled': currency.isDisabled, 'isActive': currency==selectedCurrency}" onclick="selectCurrency(this)"
+            class="currency-select ng-scope {% if 'Ether' in a %} isDisabled {% endif %}">
+            <div ui-illustration="small accounts__ethereum"></div>
+            <div ui-type="16pt" class="ng-binding">Ethereum
+              <!-- ngIf: currency.preview -->
+            </div>
+            <div ui-type="12pt light" class="ng-binding">Digital Currency</div><input
+              ui-accountadder-target="ui-AccountAdder-Target" type="radio" name="currency" ng-model="currency.currency"
+              value="ETH" ng-click="activate(currency)" required="required" ng-disabled="false"
+              class="ng-pristine ng-untouched ng-valid ng-not-empty ng-valid-required">
+          </label><!-- end ngRepeat: currency in currencies -->
+          <label ui-accountadder-item="ui-AccountAdder-Item"
+            ng-repeat="currency in currencies"
+            ng-class="{'isDisabled': currency.isDisabled, 'isActive': currency==selectedCurrency}" onclick="selectCurrency(this)"
+            class="currency-select ng-scope {% if 'Ripple XRP' in a %} isDisabled {% endif %}">
+            <div ui-illustration="small accounts__ripple"></div>
+            <div ui-type="16pt" class="ng-binding">Ripple
+              <!-- ngIf: currency.preview -->
+            </div>
+            <div ui-type="12pt light" class="ng-binding">Digital Currency</div><input
+              ui-accountadder-target="ui-AccountAdder-Target" type="radio" name="currency" ng-model="currency.currency"
+              value="XRP" ng-click="activate(currency)" required="required" ng-disabled="false"
+              class="ng-pristine ng-untouched ng-valid ng-not-empty ng-valid-required">
+          </label><!-- end ngRepeat: currency in currencies -->
+          <label ui-accountadder-item="ui-AccountAdder-Item"
+            ng-repeat="currency in currencies"
+            ng-class="{'isDisabled': currency.isDisabled, 'isActive': currency==selectedCurrency}" onclick="selectCurrency(this)"
+            class="currency-select ng-scope {% if 'Litecoin' in a %} isDisabled {% endif %}">
+            <div ui-illustration="small accounts__litecoin"></div>
+            <div ui-type="16pt" class="ng-binding">Litecoin
+              <!-- ngIf: currency.preview -->
+            </div>
+            <div ui-type="12pt light" class="ng-binding">Digital Currency</div><input
+              ui-accountadder-target="ui-AccountAdder-Target" type="radio" name="currency" ng-model="currency.currency"
+              value="LTC" ng-click="activate(currency)" required="required" ng-disabled="false"
+              class="ng-pristine ng-untouched ng-valid ng-not-empty ng-valid-required">
+          </label><!-- end ngRepeat: currency in currencies -->
+          <label ui-accountadder-item="ui-AccountAdder-Item"
+            ng-repeat="currency in currencies"
+            ng-class="{'isDisabled': currency.isDisabled, 'isActive': currency==selectedCurrency}" onclick="selectCurrency(this)"
+            class="currency-select ng-scope {% if 'USD Coin' in a %} isDisabled {% endif %}">
+            <div ui-illustration="small accounts__usdc"></div>
+            <div ui-type="16pt" class="ng-binding">USD Coin
+              <!-- ngIf: currency.preview -->
+            </div>
+            <div ui-type="12pt light" class="ng-binding">Digital Currency</div><input
+              ui-accountadder-target="ui-AccountAdder-Target" type="radio" name="currency" ng-model="currency.currency"
+              value="USDC" ng-click="activate(currency)" required="required" ng-disabled="false"
+              class="ng-pristine ng-untouched ng-valid ng-not-empty ng-valid-required">
+          </label><!-- end ngRepeat: currency in currencies -->
+          <label ui-accountadder-item="ui-AccountAdder-Item"
+            ng-repeat="currency in currencies"
+            ng-class="{'isDisabled': currency.isDisabled, 'isActive': currency==selectedCurrency}" onclick="selectCurrency(this)"
+            class="currency-select ng-scope {% if 'Maker Dai' in a %} isDisabled {% endif %}">
+            <div ui-illustration="small accounts__dai"></div>
+            <div ui-type="16pt" class="ng-binding">Maker Dai
+              <!-- ngIf: currency.preview -->
+            </div>
+            <div ui-type="12pt light" class="ng-binding">Digital Currency</div><input
+              ui-accountadder-target="ui-AccountAdder-Target" type="radio" name="currency" ng-model="currency.currency"
+              value="DAI" ng-click="activate(currency)" required="required" ng-disabled="false"
+              class="ng-pristine ng-untouched ng-valid ng-not-empty ng-valid-required">
+          </label><!-- end ngRepeat: currency in currencies -->
+          <label ui-accountadder-item="ui-AccountAdder-Item"
+            ng-repeat="currency in currencies"
+            ng-class="{'isDisabled': currency.isDisabled, 'isActive': currency==selectedCurrency}" onclick="selectCurrency(this)"
+            class="currency-select ng-scope {% if '0x Token' in a %} isDisabled {% endif %}">
+            <div ui-illustration="small accounts__zrx"></div>
+            <div ui-type="16pt" class="ng-binding">0x Token
+              <!-- ngIf: currency.preview -->
+            </div>
+            <div ui-type="12pt light" class="ng-binding">Digital Currency</div><input
+              ui-accountadder-target="ui-AccountAdder-Target" type="radio" name="currency" ng-model="currency.currency"
+              value="ZRX" ng-click="activate(currency)" required="required" ng-disabled="false"
+              class="ng-pristine ng-untouched ng-valid ng-not-empty ng-valid-required">
+          </label><!-- end ngRepeat: currency in currencies -->
+          <label ui-accountadder-item="ui-AccountAdder-Item"
+            ng-repeat="currency in currencies"
+            ng-class="{'isDisabled': currency.isDisabled, 'isActive': currency==selectedCurrency}" onclick="selectCurrency(this)"
+            class="currency-select ng-scope {% if 'Basic Attention Token' in a %} isDisabled {% endif %}">
+            <div ui-illustration="small accounts__bat"></div>
+            <div ui-type="16pt" class="ng-binding">Basic Attention Token
+              <!-- ngIf: currency.preview -->
+            </div>
+            <div ui-type="12pt light" class="ng-binding">Digital Currency</div><input
+              ui-accountadder-target="ui-AccountAdder-Target" type="radio" name="currency" ng-model="currency.currency"
+              value="BAT" ng-click="activate(currency)" required="required" ng-disabled="false"
+              class="ng-pristine ng-untouched ng-valid ng-not-empty ng-valid-required">
+          </label><!-- end ngRepeat: currency in currencies -->
+          <label ui-accountadder-item="ui-AccountAdder-Item"
+            ng-repeat="currency in currencies"
+            ng-class="{'isDisabled': currency.isDisabled, 'isActive': currency==selectedCurrency}"  onclick="selectCurrency(this)"
+            class="currency-select ng-scope {% if 'Stellar Lumens' in a %} isDisabled {% endif %}">
+            <div ui-illustration="small accounts__xlm"></div>
+            <div ui-type="16pt" class="ng-binding">Stellar Lumen
+              <!-- ngIf: currency.preview -->
+            </div>
+            <div ui-type="12pt light" class="ng-binding">Digital Currency</div><input
+              ui-accountadder-target="ui-AccountAdder-Target" type="radio" name="currency" ng-model="currency.currency"
+              value="XLM" ng-click="activate(currency)" required="required" ng-disabled="false"
+              class="ng-pristine ng-untouched ng-valid ng-not-empty ng-valid-required">
+          </label><!-- end ngRepeat: currency in currencies -->
+        </div>
+        <div ui-form-buttons="pair"><button type="button" ui-btn="cancel" onclick="showAccountModal(false)" ng-click="reject()">Cancel</button><button
+            type="button" ui-btn="its-happening" ng-show="inProgress" class="ng-hide">Adding account...</button><button
+            type="submit" ui-btn="primary" ng-hide="inProgress" onclick="CreateAccoint()" ng-disabled="new_account.$invalid">Add Account</button>
+        </div>
+      </form>
+    </article>
+  </div><!-- ngIf: visible -->
+  <div ui-modal-background="" ng-if="visible" ng-click="closeModal()" onclick="showAccountModal(false)" class="ng-scope"></div><!-- end ngIf: visible -->
+</div>
+
+<script>
+  function showAccountModal(type) {
+      if(type==true)
+        $("#addaccount")[0].style.display = "flex"
+      else
+        $("#addaccount")[0].style.display = "none"
+  }
+  var lastitem = null
+  function selectCurrency(el) {
+    lastitem = el
+    var list = $(".currency-select")
+    list.each((index,element)=>{
+      var a = element.className.toString()
+      if(!a.includes("isDisabled"))
+      {
+        element.className = "currency-select ng-scope"
+      }
+    })
+    if(!el.className.includes("isDisabled"))
+      {
+      el.className = "currency-select ng-scope isActive"
+      }
+      console.log(el)
+
+  }
+  function accountDetail(uid)
+  {
+    window.location.href = `/accounts/${uid}`
+  }
+</script>
+{% endblock %}

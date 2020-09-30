@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My CoinJar</title>
+    <base href="/">
+    <meta name="description" content="CoinJar lets you buy, sell and manage bitcoin, for the everyday and the extraordinary. Open a CoinJar today to use our beautiful, simple digital finance tools.">
+    <meta name="robots" content="index, follow, noodp">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="breakpoint" content="below-iphone-6" media="(max-width: 23em)">
+    <meta name="breakpoint" content="hand" media="(max-width: 47em)">
+    <meta name="breakpoint" content="lap" media="(min-width: 47.0001em) and (max-width: 59.937em)">
+    <meta name="breakpoint" content="desk" media="(min-width: 60em) and (max-width: 74.937em)">
+    <meta name="breakpoint" content="wall" media="(min-width: 75em)">
+    <meta name="breakpoint" content="retina" media="(-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dppx)">
+    <!-- iOS specific stuff-->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="CoinJar">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <script>!function(a,b){"use strict";var c={breakpoints:{},_isTicking:!1,_debounceLastTime:0,_namedEvents:{},_eventMatchCache:{},_globalEvents:[],onBreakpointChange:function(){var a=Array.prototype.slice.call(arguments),b=a.pop(),d=a.pop();"undefined"==typeof d?c._globalEvents.push(b):(c._namedEvents[d]=[]).push(b),k()}},d=function(c){/in/.test(b.readyState)?a.setTimeout(function(){d(c)},9):c()},e=function(a,b){var c=a.className.split(" "),d=c.indexOf(b);d>-1&&(c.splice(d,1),a.className=c.join(" "))},f=function(a,b){-1===a.className.indexOf(b)&&(a.className=""!==a.className?a.className+" "+b:b)},g=function(a,c){var d="breakpoint-"+c,g=b.documentElement;a?f(g,d):e(g,d)},h=function(a){c._globalEvents.forEach(function(b){"function"==typeof b&&b(a)})},i=function(){c._isTicking||j(k),c._isTicking=!0},j=function(b,d){if(!a.requestAnimationFrame){var e=(new Date).getTime(),f=Math.max(0,16-(e-c._debounceLastTime)),g=a.setTimeout(function(){b(e+f)},f);return c._debounceLastTime=e+f,g}a.requestAnimationFrame(b,d)},k=function(){c._isTicking=!1;var b=[];for(var d in c.breakpoints){var e=c.breakpoints[d],f=a.matchMedia(e).matches;if(c._namedEvents[d]&&c._eventMatchCache[d]!==f){c._eventMatchCache[d]=f;for(var i=0;i<c._namedEvents[d].length;i++){var j=c._namedEvents[d][i];"function"==typeof j&&j(f)}}f&&b.push(d),g(f,d)}0!==b.length&&h(b)},l=function(){for(var a=b.getElementsByTagName("meta"),d=0;d<a.length;d++)if("breakpoint"===a[d].name){var e=a[d].getAttribute("content"),f=a[d].getAttribute("media");c.breakpoints[e]=f}},m=function(){l(),k()},n=function(){l(),k(),a.addEventListener("resize",i)};"undefined"!=typeof module&&module.exports?module.exports=c:a.metaQuery=c,m(),d(n)}(window,document);
+    </script>
+    <script>
+      (function() {
+        var ua = navigator.userAgent, cl = document.documentElement.classList, testElem = document.createElement('div');
+        if (ua.match(/iPhone/)) cl.add('device-iphone', 'browser-mobile-webkit');
+        if (ua.match(/iPad/)) cl.add('device-ipad', 'browser-mobile-webkit');
+        if (ua.match(/(iPad|iPhone);.*CPU.*OS 7_\d/i)) cl.add('browser-ios7');
+        if (ua.match(/Android/)) ua.match(/SAMSUNG/) ? cl.add('device-samsung') : cl.add('device-android');
+        if (ua.match(/Trident/)) cl.add('browser-ie');
+        if (ua.match(/Chrome\/46/)) cl.add('capability-no-background-blend-modes'); 
+        if (navigator.appName == 'Microsoft Internet Explorer' || !("backgroundBlendMode" in testElem.style))
+          cl.add('capability-no-background-blend-modes');
+      })();
+      
+    </script>
+    <meta name="application-name" content="CoinJar">
+    <meta name="msapplication-TileColor" content="#FFFFFF">
+    <link rel="stylesheet" href="https://assets.coinjar.com/css/mobius-00758db4b1.css">
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://assets.coinjar.com/images/icons/apple-touch-icon-57x57-4ef2bf49ce.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://assets.coinjar.com/images/icons/apple-touch-icon-114x114-9c0def4e61.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://assets.coinjar.com/images/icons/apple-touch-icon-72x72-a18a321d54.png">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://assets.coinjar.com/images/icons/apple-touch-icon-144x144-f85c9881ea.png">
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://assets.coinjar.com/images/icons/apple-touch-icon-60x60-47878944eb.png">
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://assets.coinjar.com/images/icons/apple-touch-icon-120x120-677d635e7d.png">
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://assets.coinjar.com/images/icons/apple-touch-icon-76x76-baf731061e.png">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://assets.coinjar.com/images/icons/apple-touch-icon-152x152-d0472ab760.png">
+    <link rel="icon" type="image/png" href="https://assets.coinjar.com/images/icons/favicon-196x196-920d1b0fd3.png" sizes="196x196">
+    <link rel="icon" type="image/png" href="https://assets.coinjar.com/images/icons/favicon-96x96-255bd3b833.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="https://assets.coinjar.com/images/icons/favicon-32x32-b43f4538af.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://assets.coinjar.com/images/icons/favicon-16x16-1e2675e5f0.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="https://assets.coinjar.com/images/icons/favicon-128-d634f3b2c5.png" sizes="128x128">
+    <meta name="msapplication-TileImage" content="https://assets.coinjar.com/images/icons/mstile-144x144-f85c9881ea.png">
+    <meta name="msapplication-square70x70logo" content="https://assets.coinjar.com/images/icons/mstile-70x70-d634f3b2c5.png">
+    <meta name="msapplication-square150x150logo" content="https://assets.coinjar.com/images/icons/mstile-150x150-1a047dddd1.png">
+    <meta name="msapplication-wide310x150logo" content="https://assets.coinjar.com/images/icons/mstile-310x150-80a5ef0c58.png">
+    <meta name="msapplication-square310x310logo" content="https://assets.coinjar.com/images/icons/mstile-310x310-de3cde116a.png">
+    <script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  
+  ga('create', 'UA-41835591-1', 'auto');
+  ga('send', 'pageview');
+    </script>
+  </head>
+  <body ng-app="mobius-app" ng-controller="BodyCtrl" ng-class="bodyClasses()" class="no-user">
+    <div ui-Frame="app">
+      <aside ui-Aside ng-hide="hideSidebar">
+        <div ui-Drawer="app" ng-controller="NavCtrl">
+          <div ui-Drawer-Profile>
+            <account-image for="CurrentUser" no-initials ui-AccountImage="large" ng-click="CurrentUser.showProfile()"></account-image>
+            <div ui-Drawer-Profile-Name="username" resize-to-fit="CurrentUser.username" ng-show="CurrentUser.username"><span ui-type="at">@</span>{{ CurrentUser.username }}</div>
+            <div ui-Drawer-Profile-Name="fullname" ng-hide="CurrentUser.username">{{ CurrentUser.full_name }}</div>
+          </div>
+          <div ui-Drawer-Menu>
+            <ul ui-Drawer-Links>
+              <li ui-sref="accounts.dashboard" ng-class="{'is-active': onAccounts()}"><span svg-icon="icon__coinjar-logo" ui-svg="large"></span></li>
+              <li ui-sref="payments" ui-sref-active="is-active"><span svg-icon="icon__payments" ui-svg="large"></span>payments</li>
+              <li ui-sref="trade" ui-sref-active="is-active"><span svg-icon="icon__chart" ui-svg="large"></span>trade</li>
+              <li ui-sref="contacts" ui-sref-active="is-active"><span svg-icon="icon__user" ui-svg="large"></span>contacts</li>
+              <li ui-sref="settings" ui-sref-active="is-active"><span svg-icon="icon__settings" ui-svg="large"></span>settings</li>
+            </ul>
+          </div>
+          <!--.drawer__footer(ui-layout="flex space-around")
+          span(svg-icon="icon__menu-transactions")
+          span(svg-icon="icon__menu-personal")
+          span(svg-icon="icon__menu-edit")
+          -->
+        </div>
+      </aside>
+      <main ui-Main ng-class="{'is-wide': hideSidebar}">
+        <header ui-AppHeader>
+          <div ui-flex-child="grow-1"><a ui-sref="accounts.dashboard" ui-AppHeader-Logo ui-link="no-underline"><img src="https://assets.coinjar.com/images/header_logo-4e204695a3.svg">
+              <h1>CoinJar {{ Constants.environment }}</h1></a></div><a ng-show="CurrentUser.identified" ng-click="CurrentUser.showQuickDepositModal()" ui-Dashboard-DepositCta>{{ "header.quick_deposit" }}</a>
+          <user-dropdown ng-if="CurrentUser"></user-dropdown>
+        </header>
+        <div ui-view ng-if="CurrentUser" ui-Main-View autoscroll></div>
+        <footer ui-Footer="app" ng-controller="FooterCtrl"><a ui-link target="_blank" href="https://www.coinjar.com/privacy" translate="footer.privacy">Privacy</a><a ui-link target="_blank" href="https://www.coinjar.com/legal" translate="footer.tos">Terms of Service</a><a ui-link target="_blank" ng-href="{{supportUrl}}" translate="footer.support">Support</a><a ui-link target="_blank" href="https://www.coinjar.com/about-us#contact" translate="footer.contact_us">Contact Us</a>
+          <div ui-Footer-Logo><img src="https://assets.coinjar.com/images/header_logo-4e204695a3.svg"></div>
+        </footer>
+      </main>
+      <div ui-DrawerOpener ng-click="toggleMenu()"><span ui-DrawerOpener-Icon="open" svg-icon="icon__main-menu"></span><span ui-DrawerOpener-Icon="close" svg-icon="icon__delete-contact_list"></span></div>
+      <dat-modal></dat-modal>
+    </div>
+   
+
+  </body>
+</html>
